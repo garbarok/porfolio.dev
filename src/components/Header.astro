@@ -1,26 +1,26 @@
 ---
-import ThemeToggle from "./ThemeToggle.astro"
+import ThemeToggle from './ThemeToggle.astro'
 
 const navItems = [
   {
-    title: "Experiencia",
-    label: "experiencia",
-    url: "/#experiencia",
+    title: 'Experiencia',
+    label: 'experiencia',
+    url: '/#experiencia',
+  },
+  // {
+  //   title: "Proyectos",
+  //   label: "proyectos",
+  //   url: "/#proyectos",
+  // },
+  {
+    title: 'Sobre mí',
+    label: 'sobre-mi',
+    url: '/#sobre-mi',
   },
   {
-    title: "Proyectos",
-    label: "proyectos",
-    url: "/#proyectos",
-  },
-  {
-    title: "Sobre mí",
-    label: "sobre-mi",
-    url: "/#sobre-mi",
-  },
-  {
-    title: "Contacto",
-    label: "contacto",
-    url: "mailto:miduga@gmail.com",
+    title: 'Contacto',
+    label: 'contacto',
+    url: 'mailto:work@oscargallegoruiz.com',
   },
 ]
 ---
@@ -47,18 +47,18 @@ const navItems = [
 </header>
 
 <script>
-  document.addEventListener("astro:page-load", () => {
-    const sections = document.querySelectorAll("section")
-    const navItems = document.querySelectorAll("header nav a")
+  document.addEventListener('astro:page-load', () => {
+    const sections = document.querySelectorAll('section')
+    const navItems = document.querySelectorAll('header nav a')
 
     const callback = (entries: any[]) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           navItems.forEach((item) => {
-            if (item.getAttribute("aria-label") == entry.target.id) {
-              item.classList.add("text-blue-500")
+            if (item.getAttribute('aria-label') == entry.target.id) {
+              item.classList.add('text-blue-500')
             } else {
-              item.classList.remove("text-blue-500")
+              item.classList.remove('text-blue-500')
             }
           })
         }
@@ -67,7 +67,7 @@ const navItems = [
 
     const observer = new IntersectionObserver(callback, {
       root: null,
-      rootMargin: "0px",
+      rootMargin: '0px',
       threshold: 0.3,
     })
 
@@ -77,7 +77,7 @@ const navItems = [
 
     // Cleanup function
     document.onvisibilitychange = () => {
-      if (document.visibilityState === "hidden") {
+      if (document.visibilityState === 'hidden') {
         observer.disconnect()
       } else {
         sections.forEach((section) => {
