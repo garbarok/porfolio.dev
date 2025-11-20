@@ -44,6 +44,19 @@ export default defineConfig({
     partytown({
       config: {
         forward: ["dataLayer.push"],
+        resolveUrl(url) {
+          // Proxy Google Tag Manager scripts through Vercel
+          if (url.hostname === "www.googletagmanager.com") {
+            const proxyUrl = new URL("/proxy/gtag" + url.pathname + url.search, url.origin);
+            return proxyUrl;
+          }
+          // Proxy Google Analytics scripts through Vercel
+          if (url.hostname === "www.google-analytics.com") {
+            const proxyUrl = new URL("/proxy/analytics" + url.pathname + url.search, url.origin);
+            return proxyUrl;
+          }
+          return url;
+        },
       },
     }),
     AutoImport({
