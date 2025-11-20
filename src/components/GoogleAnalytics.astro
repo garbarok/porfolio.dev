@@ -19,11 +19,6 @@ const shouldLoadGA = isProduction && GA_MEASUREMENT_ID
 {
   shouldLoadGA && (
     <>
-      <!-- Initialize dataLayer before loading gtag.js -->
-      <script is:inline>
-        window.dataLayer = window.dataLayer || [];
-      </script>
-
       <!-- Google tag (gtag.js) with Partytown -->
       <script
         is:inline
@@ -34,13 +29,11 @@ const shouldLoadGA = isProduction && GA_MEASUREMENT_ID
       <!-- Configure Google Analytics with Partytown -->
       <script is:inline type="text/partytown" set:html={`
         window.dataLayer = window.dataLayer || [];
-        window.gtag = function gtag() {
-          window.dataLayer.push(arguments);
+        function gtag() {
+          dataLayer.push(arguments);
         }
         gtag("js", new Date());
-        gtag("config", "${GA_MEASUREMENT_ID}", {
-          page_path: window.location.pathname,
-        });
+        gtag("config", "${GA_MEASUREMENT_ID}");
       `} />
 
       <!-- View Transitions Support: Track page views on navigation -->
