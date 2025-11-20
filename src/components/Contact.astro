@@ -1,0 +1,350 @@
+---
+import MailIcon from '@components/icons/Mail.astro'
+
+interface Props {
+  useApi?: boolean
+}
+
+const { useApi = true } = Astro.props
+const formspreeFormId = import.meta.env.FORMSPREE_FORM_ID || 'manvadlr'
+const formAction = useApi ? '/api/contact' : `https://formspree.io/f/${formspreeFormId}`
+
+const contactEmail = import.meta.env.PUBLIC_CONTACT_EMAIL || 'work@oscargallegoruiz.com'
+const linkedinUrl = import.meta.env.PUBLIC_LINKEDIN_URL || 'https://linkedin.com/in/oscargallegoruiz'
+const githubUrl = import.meta.env.PUBLIC_GITHUB_URL || 'https://github.com/garbarok'
+---
+
+<div class="mx-auto max-w-3xl">
+  <!-- Contact Info -->
+  <div class="mb-12 text-center">
+    <p class="text-lg text-gray-600 dark:text-gray-400">
+      ¿Tienes un proyecto en mente? ¿Quieres colaborar? Envíame un mensaje y
+      hablemos.
+    </p>
+    <div class="mt-6 flex flex-wrap items-center justify-center gap-4">
+      <a
+        href={`mailto:${contactEmail}`}
+        class="group inline-flex items-center gap-2 text-base font-medium text-blue-600 transition hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+      >
+        <MailIcon class="size-5" />
+        {contactEmail}
+      </a>
+      <span class="text-gray-400 dark:text-gray-600">•</span>
+      <a
+        href={linkedinUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="text-base font-medium text-gray-600 transition hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+      >
+        LinkedIn
+      </a>
+      <span class="text-gray-400 dark:text-gray-600">•</span>
+      <a
+        href={githubUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="text-base font-medium text-gray-600 transition hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+      >
+        GitHub
+      </a>
+    </div>
+  </div>
+
+  <!-- Contact Form -->
+  <form
+    id="contact-form"
+    action={formAction}
+    method="POST"
+    class="rounded-2xl border border-gray-200 bg-white p-8 shadow-sm dark:border-gray-800 dark:bg-gray-900/50"
+  >
+    <!-- Success Message -->
+    <div
+      id="success-message"
+      class="mb-6 hidden rounded-lg border border-green-200 bg-green-50 p-4 dark:border-green-800 dark:bg-green-900/20"
+    >
+      <div class="flex items-center gap-3">
+        <svg
+          class="h-5 w-5 text-green-600 dark:text-green-400"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <p class="text-sm font-medium text-green-800 dark:text-green-200">
+          ¡Mensaje enviado con éxito! Te responderé pronto.
+        </p>
+      </div>
+    </div>
+
+    <!-- Error Message -->
+    <div
+      id="error-message"
+      class="mb-6 hidden rounded-lg border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-900/20"
+    >
+      <div class="flex items-center gap-3">
+        <svg
+          class="h-5 w-5 text-red-600 dark:text-red-400"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <p
+          id="error-text"
+          class="text-sm font-medium text-red-800 dark:text-red-200"
+        >
+        </p>
+      </div>
+    </div>
+    <!-- Name -->
+    <div class="mb-6">
+      <label
+        for="name"
+        class="mb-2 block text-sm font-semibold text-gray-900 dark:text-white"
+      >
+        Nombre completo <span class="text-red-500">*</span>
+      </label>
+      <input
+        type="text"
+        id="name"
+        name="name"
+        required
+        placeholder="Tu nombre"
+        class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500 dark:focus:border-blue-400 dark:focus:ring-blue-400/20"
+      />
+      <p
+        id="name-error"
+        class="mt-1 hidden text-sm text-red-600 dark:text-red-400"
+      >
+      </p>
+    </div>
+
+    <!-- Email -->
+    <div class="mb-6">
+      <label
+        for="email"
+        class="mb-2 block text-sm font-semibold text-gray-900 dark:text-white"
+      >
+        Email <span class="text-red-500">*</span>
+      </label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        required
+        placeholder="tu@email.com"
+        class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500 dark:focus:border-blue-400 dark:focus:ring-blue-400/20"
+      />
+      <p
+        id="email-error"
+        class="mt-1 hidden text-sm text-red-600 dark:text-red-400"
+      >
+      </p>
+    </div>
+
+    <!-- Subject -->
+    <div class="mb-6">
+      <label
+        for="subject"
+        class="mb-2 block text-sm font-semibold text-gray-900 dark:text-white"
+      >
+        Asunto
+      </label>
+      <input
+        type="text"
+        id="subject"
+        name="subject"
+        placeholder="¿De qué quieres hablar?"
+        class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500 dark:focus:border-blue-400 dark:focus:ring-blue-400/20"
+      />
+      <p
+        id="subject-error"
+        class="mt-1 hidden text-sm text-red-600 dark:text-red-400"
+      >
+      </p>
+    </div>
+
+    <!-- Message -->
+    <div class="mb-6">
+      <label
+        for="message"
+        class="mb-2 block text-sm font-semibold text-gray-900 dark:text-white"
+      >
+        Mensaje <span class="text-red-500">*</span>
+      </label>
+      <textarea
+        id="message"
+        name="message"
+        required
+        rows="6"
+        placeholder="Cuéntame sobre tu proyecto o idea..."
+        class="w-full resize-none rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500 dark:focus:border-blue-400 dark:focus:ring-blue-400/20"
+      ></textarea>
+      <p
+        id="message-error"
+        class="mt-1 hidden text-sm text-red-600 dark:text-red-400"
+      >
+      </p>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="flex items-center justify-between">
+      <p class="text-sm text-gray-600 dark:text-gray-400">
+        <span class="text-red-500">*</span> Campos requeridos
+      </p>
+      <button
+        type="submit"
+        id="submit-button"
+        class="inline-flex items-center justify-center gap-2 rounded-full bg-black px-8 py-3 text-base font-medium text-white transition hover:bg-gray-800 focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-white dark:text-black dark:hover:bg-gray-200 dark:focus:ring-white dark:focus:ring-offset-gray-900"
+      >
+        <MailIcon class="size-4" />
+        <span id="button-text">Enviar mensaje</span>
+        <svg
+          id="button-spinner"
+          class="hidden h-5 w-5 animate-spin"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"></circle>
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          ></path>
+        </svg>
+      </button>
+    </div>
+  </form>
+
+  <script define:vars={{ useApi }} is:inline>
+    document.addEventListener('astro:page-load', () => {
+      const form = document.getElementById('contact-form')
+
+      // If not using API, allow default form submission to Formspree
+      if (!useApi) {
+        return
+      }
+
+      const submitButton = document.getElementById('submit-button')
+      const buttonText = document.getElementById('button-text')
+      const buttonSpinner = document.getElementById('button-spinner')
+      const successMessage = document.getElementById('success-message')
+      const errorMessage = document.getElementById('error-message')
+      const errorText = document.getElementById('error-text')
+
+      // Clear all error messages
+      const clearErrors = () => {
+        ;['name', 'email', 'subject', 'message'].forEach((field) => {
+          const errorEl = document.getElementById(`${field}-error`)
+          const inputEl = document.getElementById(field)
+          if (errorEl && inputEl) {
+            errorEl.classList.add('hidden')
+            errorEl.textContent = ''
+            inputEl.classList.remove('border-red-500', 'dark:border-red-500')
+          }
+        })
+        if (successMessage) successMessage.classList.add('hidden')
+        if (errorMessage) errorMessage.classList.add('hidden')
+      }
+
+      // Show field error
+      const showFieldError = (field, message) => {
+        const errorEl = document.getElementById(`${field}-error`)
+        const inputEl = document.getElementById(field)
+        if (errorEl && inputEl) {
+          errorEl.textContent = message
+          errorEl.classList.remove('hidden')
+          inputEl.classList.add('border-red-500', 'dark:border-red-500')
+        }
+      }
+
+      // Handle form submission for API route
+      if (form) {
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault()
+          clearErrors()
+
+          // Disable button and show loading state
+          submitButton.disabled = true
+          if (buttonText) buttonText.textContent = 'Enviando...'
+          if (buttonSpinner) buttonSpinner.classList.remove('hidden')
+
+          try {
+            const formData = new FormData(form)
+            const response = await fetch(form.action, {
+              method: 'POST',
+              body: formData,
+            })
+
+            const data = await response.json()
+
+            if (response.ok && data.success) {
+              // Show success message
+              if (successMessage) successMessage.classList.remove('hidden')
+              form.reset()
+              // Scroll to success message
+              if (successMessage) {
+                successMessage.scrollIntoView({
+                  behavior: 'smooth',
+                  block: 'nearest',
+                })
+              }
+            } else if (data.errors) {
+              // Show validation errors
+              data.errors.forEach((error) => {
+                showFieldError(error.field, error.message)
+              })
+            } else {
+              // Show general error
+              if (errorText)
+                errorText.textContent =
+                  data.message || 'Ocurrió un error al enviar el mensaje.'
+              if (errorMessage) errorMessage.classList.remove('hidden')
+            }
+          } catch (error) {
+            console.error('Form submission error:', error)
+            if (errorText)
+              errorText.textContent =
+                'Error de conexión. Por favor intenta de nuevo.'
+            if (errorMessage) errorMessage.classList.remove('hidden')
+          } finally {
+            // Re-enable button and restore state
+            submitButton.disabled = false
+            if (buttonText) buttonText.textContent = 'Enviar mensaje'
+            if (buttonSpinner) buttonSpinner.classList.add('hidden')
+          }
+        })
+      }
+    })
+  </script>
+
+  <!-- Additional Info -->
+  <div class="mt-8 mb-8 text-center">
+    <p class="text-sm text-gray-600 dark:text-gray-400">
+      También puedes escribirme directamente a{' '}
+      <a
+        href={`mailto:${contactEmail}`}
+        class="font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+      >
+        {contactEmail}
+      </a>
+    </p>
+  </div>
+</div>

@@ -23,7 +23,7 @@ const navItems = [
   {
     title: "Contacto",
     label: "contacto",
-    url: "mailto:work@oscargallegoruiz.com",
+    url: "/contact",
   },
 ];
 
@@ -41,7 +41,7 @@ const currentPath = Astro.url.pathname;
         <a
           class:list={[
             "relative block whitespace-nowrap px-3 py-2 transition hover:text-blue-500",
-            { "text-blue-500": currentPath.startsWith(link.url) && link.url !== "/" && !link.url.startsWith("mailto:") }
+            { "text-blue-500": currentPath === link.url || (currentPath.startsWith(link.url) && link.url !== "/") }
           ]}
           aria-label={link.label}
           href={link.url}

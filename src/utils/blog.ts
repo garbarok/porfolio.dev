@@ -1,14 +1,23 @@
 import type { CollectionEntry } from "astro:content";
+import { format, formatDistanceToNow } from "date-fns";
+import { es } from "date-fns/locale";
+import GithubSlugger from "github-slugger";
 
 const WORDS_PER_MINUTE = 200;
-const SPANISH_LOCALE = "es-ES";
+// Create a single slugger instance to avoid recreation overhead
+const slugger = new GithubSlugger();
 
 export function formatDate(date: Date): string {
-  return new Intl.DateTimeFormat(SPANISH_LOCALE, {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  }).format(date);
+  // Use date-fns for better formatting
+  return format(date, "d 'de' MMMM 'de' yyyy", { locale: es });
+}
+
+export function formatDateShort(date: Date): string {
+  return format(date, "dd/MM/yyyy", { locale: es });
+}
+
+export function formatDateRelative(date: Date): string {
+  return formatDistanceToNow(date, { addSuffix: true, locale: es });
 }
 
 export function calculateReadingTime(content: string): number {
@@ -17,16 +26,14 @@ export function calculateReadingTime(content: string): number {
 }
 
 export function slugify(text: string): string {
-  return text
-    .toString()
-    .toLowerCase()
-    .trim()
-    .replace(/\s+/g, "-")
-    .replace(/&/g, "-and-")
-    .replace(/[^\w\-]+/g, "")
-    .replace(/\-\-+/g, "-")
-    .replace(/^-+/, "")
-    .replace(/-+$/, "");
+  // Use github-slugger for consistent, URL-safe slugs
+  slugger.reset();
+  return slugger.slug(text);
+}
+
+export function createHeadingId(text: string): string {
+  // Reuse slugify function to avoid code duplication
+  return slugify(text);
 }
 
 export function plainify(content: string): string {

@@ -20,10 +20,16 @@
     "@tailwindcss/vite": "^4.1.17",
     "@vercel/analytics": "^1.5.0",
     "astro": "5.15.9",
+    "astro-auto-import": "^0.4.5",
     "astro-robots-txt": "1.0.0",
     "botid": "^1.5.10",
+    "date-fns": "^4.1.0",
+    "github-slugger": "^2.0.0",
+    "remark-collapse": "^0.1.2",
+    "remark-toc": "^9.0.0",
     "tailwindcss": "4.1.17",
-    "typescript": "5.8.2"
+    "typescript": "5.8.2",
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "prettier": "3.6.2",
