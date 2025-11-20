@@ -93,18 +93,38 @@ const navItems = [
     animation: nav-shadown 1s linear both;
     animation-timeline: scroll();
     animation-range: 0 100px;
+    background-color: rgb(255 255 255 / 0.5);
   }
 
-  nav {
-    @apply dark:bg-gray-800/90 bg-white/50;
+  @media (prefers-color-scheme: dark) {
+    nav {
+      background-color: rgb(31 41 55 / 0.9);
+    }
   }
 
   @keyframes nav-shadown {
     0% {
-      @apply dark:bg-gray-800/0 bg-white/0;
+      background-color: rgb(255 255 255 / 0);
     }
     to {
-      @apply shadow-lg ring-1 backdrop-blur ring-white/10;
+      background-color: rgb(255 255 255 / 0.5);
+      box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgb(255 255 255 / 0.1);
+    }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    @keyframes nav-shadown {
+      0% {
+        background-color: rgb(31 41 55 / 0);
+      }
+      to {
+        background-color: rgb(31 41 55 / 0.9);
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgb(255 255 255 / 0.1);
+      }
     }
   }
 </style>

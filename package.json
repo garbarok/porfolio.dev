@@ -15,7 +15,6 @@
     "@astrojs/mdx": "^4.3.11",
     "@astrojs/partytown": "^2.1.4",
     "@astrojs/sitemap": "^3.6.0",
-    "@astrojs/tailwind": "6.0.2",
     "@fontsource-variable/onest": "5.0.6",
     "@tailwindcss/vite": "^4.1.17",
     "@vercel/analytics": "^1.5.0",
