@@ -1,9 +1,13 @@
 ---
+import { getLangFromUrl, useTranslations } from '@/i18n/utils';
 import GitHub from "./icons/GitHub.astro";
 import NextJS from "./icons/NextJS.astro";
 import Tailwind from "./icons/Tailwind.astro";
 import Link from "./icons/Link.astro";
 import LinkButton from "./LinkButton.astro";
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 
 const TAGS = {
   NEXT: {
@@ -17,11 +21,16 @@ const TAGS = {
     icon: Tailwind,
   },
 };
+
+const projectsData = t('projects') as Array<{
+  title: string;
+  description: string;
+  imageAlt: string;
+}>;
+
 const PROJECTS = [
   {
-    title: "SnapCompress - Herramientas gratuitas de compresión de imágenes",
-    description:
-      "Comprime, convierte y redimensiona imágenes al instante en el navegador. Soporte para JPEG, PNG, WEBP y HEIC. 100% gratuito y privado. Procesamiento del lado del cliente sin subidas.",
+    ...projectsData[0],
     link: "https://snapcompress.io/",
     github: undefined,
     image: "/projects/snapcompress.webp",
@@ -32,12 +41,12 @@ const PROJECTS = [
 
 <div class="flex flex-col gap-y-16">
   {
-    PROJECTS.map(({ image, title, description, tags, link, github }) => (
+    PROJECTS.map(({ image, title, description, tags, link, github, imageAlt }) => (
       <article class="group flex flex-col space-y-8 space-x-0 md:flex-row md:space-y-0 md:space-x-8">
         <div class="w-full md:w-1/2">
           <div class="relative col-span-6 row-span-5 flex transform flex-col items-center gap-8 overflow-clip rounded-xl shadow-xl transition duration-500 ease-in-out sm:rounded-xl md:group-hover:-translate-y-1 md:group-hover:shadow-2xl lg:border lg:border-gray-800 lg:hover:border-gray-700 lg:hover:bg-gray-800/50">
             <img
-              alt="Recién llegado vs 5 años en Nueva Zelanda"
+              alt={imageAlt}
               class="h-56 w-full object-cover object-top transition duration-500 sm:h-full md:scale-110 md:group-hover:scale-105"
               loading="lazy"
               src={image}

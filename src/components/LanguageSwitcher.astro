@@ -1,0 +1,33 @@
+---
+import { getLangFromUrl } from '@/i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const currentPath = Astro.url.pathname;
+
+// Generate the alternate language URL
+const getAlternateUrl = () => {
+  if (lang === 'es') {
+    // Switch to English
+    return currentPath === '/' ? '/en' : `/en${currentPath}`;
+  } else {
+    // Switch to Spanish (remove /en prefix)
+    return currentPath.replace(/^\/en/, '') || '/';
+  }
+};
+
+const alternateUrl = getAlternateUrl();
+const alternateLang = lang === 'es' ? 'en' : 'es';
+const alternateLangName = lang === 'es' ? 'EN' : 'ES';
+---
+
+<a
+  href={alternateUrl}
+  class="flex items-center justify-center rounded-full px-3 py-2 text-sm font-medium text-white transition hover:text-blue-500 hover:bg-gray-800/50"
+  aria-label={`Switch to ${alternateLang === 'en' ? 'English' : 'Spanish'}`}
+  title={`Switch to ${alternateLang === 'en' ? 'English' : 'Spanish'}`}
+>
+  <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"></path>
+  </svg>
+  {alternateLangName}
+</a>

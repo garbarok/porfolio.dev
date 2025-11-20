@@ -1,40 +1,20 @@
 ---
+import { getLangFromUrl, useTranslations } from '@/i18n/utils';
 import ExperienceItem from "./ExperienceItem.astro";
-const EXPERIENCE = [
-  {
-    date: "Mayo 2025 - Actualidad",
-    title: "Ingeniero de Software",
-    company: "Rindus (para Stibo DX)",
-    description:
-      "Desarrollo de aplicaciones empresariales con Angular 18/19 para Stibo DX. Implementación de arquitecturas frontend escalables, componentes reutilizables y gestión avanzada del estado. Colaboración en equipos multiculturales en modalidad remota, aplicando mejores prácticas de desarrollo y código limpio.",
-  },
-  {
-    date: "Agosto 2024 - Marzo 2025",
-    title: "Software Developer",
-    company: "MavelPoint",
-    description:
-      "Diseñé y optimicé aplicaciones con Next.js y Astro, mejorando velocidad de carga y experiencia de usuario. Implementé arquitecturas UI modulares con Zustand, reduciendo duplicación de código. Colaboré en backend con NestJS y Express, optimizando APIs REST. Gestioné bases de datos PostgreSQL con Prisma ORM, reduciendo tiempos de respuesta. Aseguré autenticación con Clerk y colaboré con diseñadores en Figma.",
-  },
-  {
-    date: "Enero 2024 - Agosto 2024",
-    title: "Software Developer",
-    company: "Check-in Scan",
-    description:
-      "Desarrollé aplicación híbrida en Expo (React y React Native) para desktop y móviles. Construí plataforma de pagos en Next.js con integración de Stripe para automatización de suscripciones. Implementé API en NestJS (Fastify) para comunicación con ISTAT Italia, enviando datos turísticos en JSON. Mejoré sincronización de datos con Redux y React Query. Aseguré interacciones con OAuth y JWT.",
-  },
-  {
-    date: "Abril 2022 - Noviembre 2023",
-    title: "Junior Web Developer",
-    company: "AddComm",
-    description:
-      "Automaticé procesos de integración de APIs y transformación de datos en Flowize (Low-Code), optimizando eficiencia en operaciones empresariales. Colaboré en equipo híbrido en Málaga, desarrollando soluciones para múltiples clientes.",
-  },
-];
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const EXPERIENCE = t('experience') as Array<{
+  date: string;
+  title: string;
+  company: string;
+  description: string;
+}>;
 ---
 
 <ol class="relative mt-16" role="list" aria-label="Experiencia laboral">
   {
-    EXPERIENCE.map((experience) => (
+    EXPERIENCE.map((experience: any) => (
       <li>
         <ExperienceItem {...experience} />
       </li>

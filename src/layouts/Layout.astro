@@ -7,6 +7,7 @@ import Footer from '../components/Footer.astro'
 import Header from '../components/Header.astro'
 import GoogleAnalytics from '../components/GoogleAnalytics.astro'
 import '../styles/global.css'
+import { getLangFromUrl } from '../i18n/utils'
 
 interface Props {
   title: string
@@ -16,7 +17,10 @@ interface Props {
   canonicalURL?: string
   publishedTime?: string
   modifiedTime?: string
+  lang?: 'es' | 'en'
 }
+
+const lang = getLangFromUrl(Astro.url)
 
 const {
   description,
@@ -40,7 +44,7 @@ const socialImage = new URL(image, SITE_URL).href
 ---
 
 <!doctype html>
-<html lang="es" class="dark">
+<html lang={lang} class="dark">
   <head>
     <!-- Basic Meta Tags -->
     <meta charset="UTF-8" />
@@ -62,6 +66,26 @@ const socialImage = new URL(image, SITE_URL).href
     <!-- Canonical URL -->
     <link rel="canonical" href={canonicalURL} />
 
+    <!-- Hreflang Tags for SEO -->
+    {
+      (() => {
+        // Get the current path without language prefix
+        const currentPath = Astro.url.pathname.replace(/^\/(es|en)/, '') || '/'
+
+        // Generate hreflang URLs
+        const esUrl = new URL(currentPath === '/' ? '/' : currentPath, SITE_URL).href
+        const enUrl = new URL(`/en${currentPath}`, SITE_URL).href
+
+        return (
+          <>
+            <link rel="alternate" hreflang="es" href={esUrl} />
+            <link rel="alternate" hreflang="en" href={enUrl} />
+            <link rel="alternate" hreflang="x-default" href={esUrl} />
+          </>
+        )
+      })()
+    }
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content={type} />
     <meta property="og:url" content={canonicalURL} />
@@ -75,7 +99,7 @@ const socialImage = new URL(image, SITE_URL).href
       content={`${AUTHOR_NAME} - Portfolio Preview`}
     />
     <meta property="og:site_name" content={SITE_NAME} />
-    <meta property="og:locale" content="es_ES" />
+    <meta property="og:locale" content={lang === 'es' ? 'es_ES' : 'en_US'} />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -181,7 +205,7 @@ const socialImage = new URL(image, SITE_URL).href
         name: SITE_NAME,
         url: SITE_URL,
         description: description,
-        inLanguage: 'es-ES',
+        inLanguage: lang === 'es' ? 'es-ES' : 'en-US',
         author: {
           '@type': 'Person',
           name: AUTHOR_NAME,

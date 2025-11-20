@@ -1,5 +1,9 @@
 ---
-const personalImageAlt = "Oscar Gallego";
+import { getLangFromUrl, useTranslations } from '@/i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const aboutData = t('about') as { imageAlt: string; paragraphs: string[] };
 ---
 
 <article
@@ -8,37 +12,16 @@ const personalImageAlt = "Oscar Gallego";
   <div
     class="[>p]:mb-4 [>p>strong]:text-yellow-500 dark:[>p>strong]:text-yellow-100 [>p>strong]:font-normal [>p>strong]:font-mono order-2 text-pretty md:order-1"
   >
-    <p>
-      Me llamo Oscar Gallego y soy desarrollador full stack con experiencia en <strong
-        >frontend, backend e infraestructura</strong
-      >. Comencé mi trayectoria en tecnología tras un giro profesional y desde
-      entonces he trabajado con tecnologías como Next.js, NestJS, y Astro para
-      construir aplicaciones web escalables.
-    </p>
-
-    <p>
-      A lo largo de mi carrera, he trabajado en empresas como <strong
-        >Mavelpoint, Check-in Scan y AddComm</strong
-      >, donde optimicé el rendimiento de aplicaciones web, implementé
-      microservicios y mejoré la arquitectura de software, logrando <strong
-        >reducciones en tiempos de carga de hasta un 50%</strong
-      >.
-    </p>
-
-    <p>
-      Además, me apasiona el aprendizaje continuo, la optimización de código y
-      compartir conocimientos con la comunidad. Actualmente, estoy
-      perfeccionando mis habilidades en <strong
-        >React, NestJS y arquitectura limpia</strong
-      >, con el objetivo de seguir desarrollando soluciones innovadoras.
-    </p>
+    {aboutData.paragraphs.map((paragraph: string) => (
+      <p set:html={paragraph} />
+    ))}
   </div>
 
   <img
     width="200"
     height="200"
     src="https://res.cloudinary.com/dl0qx4iof/image/upload/t_Grayscale/v1741862968/1687428697293_hhunqs.jpg"
-    alt={personalImageAlt}
+    alt={aboutData.imageAlt}
     class="order-1 aspect-square h-full w-64 rotate-3 rounded-2xl bg-black/20 object-cover p-1 ring-1 ring-black/70 md:order-2 lg:w-64 lg:p-2 dark:bg-yellow-500/5 dark:ring-white/20"
     style="object-position: 50% 50%"
   />

@@ -1,23 +1,29 @@
 import type { CollectionEntry } from "astro:content";
 import { format, formatDistanceToNow } from "date-fns";
-import { es } from "date-fns/locale";
+import { es, enUS } from "date-fns/locale";
 import GithubSlugger from "github-slugger";
 
 const WORDS_PER_MINUTE = 200;
 // Create a single slugger instance to avoid recreation overhead
 const slugger = new GithubSlugger();
 
-export function formatDate(date: Date): string {
+const locales = { es, en: enUS };
+
+export function formatDate(date: Date, lang: 'es' | 'en' = 'es'): string {
   // Use date-fns for better formatting
-  return format(date, "d 'de' MMMM 'de' yyyy", { locale: es });
+  const locale = locales[lang];
+  const formatString = lang === 'es' ? "d 'de' MMMM 'de' yyyy" : "MMMM d, yyyy";
+  return format(date, formatString, { locale });
 }
 
-export function formatDateShort(date: Date): string {
-  return format(date, "dd/MM/yyyy", { locale: es });
+export function formatDateShort(date: Date, lang: 'es' | 'en' = 'es'): string {
+  const locale = locales[lang];
+  return format(date, "dd/MM/yyyy", { locale });
 }
 
-export function formatDateRelative(date: Date): string {
-  return formatDistanceToNow(date, { addSuffix: true, locale: es });
+export function formatDateRelative(date: Date, lang: 'es' | 'en' = 'es'): string {
+  const locale = locales[lang];
+  return formatDistanceToNow(date, { addSuffix: true, locale });
 }
 
 export function calculateReadingTime(content: string): number {
@@ -83,8 +89,13 @@ export function sortByDate<T extends { data: { pubDate: Date } }>(
   );
 }
 
-export function getPublishedPosts(posts: CollectionEntry<"blog">[]) {
-  return posts.filter((post) => !post.data.draft);
+export function getPublishedPosts(posts: CollectionEntry<"blog">[], lang?: string) {
+  return posts.filter((post) => {
+    const isPublished = !post.data.draft;
+    if (!lang) return isPublished;
+    // Filter by language (post.id starts with "es/" or "en/")
+    return isPublished && post.id.startsWith(`${lang}/`);
+  });
 }
 
 export function getAllTags(posts: CollectionEntry<"blog">[]): string[] {

@@ -1,0 +1,86 @@
+{
+  "nav": {
+    "experience": "Experiencia",
+    "projects": "Proyectos",
+    "about": "Sobre mí",
+    "blog": "Blog",
+    "contact": "Contacto"
+  },
+  "hero": {
+    "greeting": "Hey, soy Óscar",
+    "description": "+3 años de experiencia. <strong>Fullstack Developer</strong> de Málaga, España 🇪🇸. Especializado en el desarrollo de aplicaciones web únicas.",
+    "contact": "Contáctame"
+  },
+  "section": {
+    "experience": "Experiencia laboral",
+    "projects": "Proyectos",
+    "about": "Sobre mí",
+    "blog": "Blog"
+  },
+  "footer": {
+    "about": "Sobre mí",
+    "contact": "Contacto"
+  },
+  "blog": {
+    "recentPosts": "Publicaciones recientes",
+    "readMore": "Leer más",
+    "continueReading": "Continuar leyendo",
+    "minRead": "min de lectura",
+    "publishedOn": "Publicado el",
+    "by": "por",
+    "backToBlog": "Volver al blog",
+    "tags": "Etiquetas",
+    "relatedPosts": "Artículos relacionados",
+    "tableOfContents": "Tabla de contenidos",
+    "share": "Compartir",
+    "shareOn": "Compartir en"
+  },
+  "meta": {
+    "title": "Óscar Gallego - Desarrollador Full Stack | Angular, NestJS & Next.js",
+    "description": "Ingeniero de software con +3 años de experiencia en frontend y backend. Especializado en Angular 19, NestJS, PostgreSQL y arquitecturas escalables. Actualmente en Rindus para Stibo DX.",
+    "siteName": "Óscar Gallego - Ingeniero de Software",
+    "jobTitle": "Ingeniero de Software",
+    "imageAlt": "Óscar Gallego - Vista previa del portfolio"
+  },
+  "experience": [
+    {
+      "date": "Mayo 2025 - Actualidad",
+      "title": "Ingeniero de Software",
+      "company": "Rindus (para Stibo DX)",
+      "description": "Desarrollo de aplicaciones empresariales con Angular 18/19 para Stibo DX. Implementación de arquitecturas frontend escalables, componentes reutilizables y gestión avanzada del estado. Colaboración en equipos multiculturales en modalidad remota, aplicando mejores prácticas de desarrollo y código limpio."
+    },
+    {
+      "date": "Agosto 2024 - Marzo 2025",
+      "title": "Software Developer",
+      "company": "MavelPoint",
+      "description": "Diseñé y optimicé aplicaciones con Next.js y Astro, mejorando velocidad de carga y experiencia de usuario. Implementé arquitecturas UI modulares con Zustand, reduciendo duplicación de código. Colaboré en backend con NestJS y Express, optimizando APIs REST. Gestioné bases de datos PostgreSQL con Prisma ORM, reduciendo tiempos de respuesta. Aseguré autenticación con Clerk y colaboré con diseñadores en Figma."
+    },
+    {
+      "date": "Enero 2024 - Agosto 2024",
+      "title": "Software Developer",
+      "company": "Check-in Scan",
+      "description": "Desarrollé aplicación híbrida en Expo (React y React Native) para desktop y móviles. Construí plataforma de pagos en Next.js con integración de Stripe para automatización de suscripciones. Implementé API en NestJS (Fastify) para comunicación con ISTAT Italia, enviando datos turísticos en JSON. Mejoré sincronización de datos con Redux y React Query. Aseguré interacciones con OAuth y JWT."
+    },
+    {
+      "date": "Abril 2022 - Noviembre 2023",
+      "title": "Junior Web Developer",
+      "company": "AddComm",
+      "description": "Automaticé procesos de integración de APIs y transformación de datos en Flowize (Low-Code), optimizando eficiencia en operaciones empresariales. Colaboré en equipo híbrido en Málaga, desarrollando soluciones para múltiples clientes."
+    }
+  ],
+  "projects": [
+    {
+      "title": "SnapCompress - Herramientas gratuitas de compresión de imágenes",
+      "description": "Comprime, convierte y redimensiona imágenes al instante en el navegador. Soporte para JPEG, PNG, WEBP y HEIC. 100% gratuito y privado. Procesamiento del lado del cliente sin subidas.",
+      "imageAlt": "Captura de pantalla de SnapCompress"
+    }
+  ],
+  "about": {
+    "imageAlt": "Oscar Gallego",
+    "paragraphs": [
+      "Me llamo Oscar Gallego y soy desarrollador full stack con experiencia en <strong>frontend, backend e infraestructura</strong>. Comencé mi trayectoria en tecnología tras un giro profesional y desde entonces he trabajado con tecnologías como Next.js, NestJS, y Astro para construir aplicaciones web escalables.",
+      "A lo largo de mi carrera, he trabajado en empresas como <strong>Mavelpoint, Check-in Scan y AddComm</strong>, donde optimicé el rendimiento de aplicaciones web, implementé microservicios y mejoré la arquitectura de software, logrando <strong>reducciones en tiempos de carga de hasta un 50%</strong>.",
+      "Además, me apasiona el aprendizaje continuo, la optimización de código y compartir conocimientos con la comunidad. Actualmente, estoy perfeccionando mis habilidades en <strong>React, NestJS y arquitectura limpia</strong>, con el objetivo de seguir desarrollando soluciones innovadoras."
+    ]
+  }
+}

@@ -1,8 +1,12 @@
 ---
-const personalImageAlt = "Óscar Gallego";
+import { getLangFromUrl, useTranslations } from '@/i18n/utils';
 import LinkedInIcon from "@components/icons/LinkedIn.astro";
 import MailIcon from "@components/icons/Mail.astro";
 import SocialPill from "@components/SocialPill.astro";
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const personalImageAlt = "Óscar Gallego";
 ---
 
 <div class="max-w-xl">
@@ -16,18 +20,16 @@ import SocialPill from "@components/SocialPill.astro";
   <h1
     class="text-4xl font-bold tracking-tight text-gray-800 sm:text-5xl dark:text-white"
   >
-    Hey, soy Óscar
+    {t('hero.greeting')}
   </h1>
   <p
     class="mt-6 text-xl text-gray-800 dark:text-gray-300 [&>strong]:font-semibold [&>strong]:text-yellow-500 dark:[&>strong]:text-yellow-200"
-  >
-    +3 años de experiencia. <strong>Fullstack Developer</strong> de Málaga, España
-    🇪🇸. Especializado en el desarrollo de aplicaciones web únicas.
-  </p>
+    set:html={t('hero.description')}
+  />
   <nav class="mt-8 flex flex-wrap gap-4">
     <SocialPill href="mailto:work@oscargallegoruiz.com">
       <MailIcon class="size-4" />
-      Contáctame
+      {t('hero.contact')}
     </SocialPill>
     <SocialPill href="https://linkedin.com/in/oscargallegoruiz">
       <LinkedInIcon class="size-4" />

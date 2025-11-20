@@ -1,29 +1,35 @@
 ---
+import { getLangFromUrl, useTranslations } from '@/i18n/utils';
+import LanguageSwitcher from '@components/LanguageSwitcher.astro';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
 const navItems = [
   {
-    title: "Experiencia",
+    title: t("nav.experience"),
     label: "experiencia",
-    url: "/#experiencia",
+    url: lang === 'es' ? "/#experiencia" : "/en/#experiencia",
   },
   {
-    title: "Proyectos",
+    title: t("nav.projects"),
     label: "proyectos",
-    url: "/#proyectos",
+    url: lang === 'es' ? "/#proyectos" : "/en/#proyectos",
   },
   {
-    title: "Sobre mí",
+    title: t("nav.about"),
     label: "sobre-mi",
-    url: "/#sobre-mi",
+    url: lang === 'es' ? "/#sobre-mi" : "/en/#sobre-mi",
   },
   {
-    title: "Blog",
+    title: t("nav.blog"),
     label: "blog",
-    url: "/blog",
+    url: lang === 'es' ? "/blog" : "/en/blog",
   },
   {
-    title: "Contacto",
+    title: t("nav.contact"),
     label: "contacto",
-    url: "/contact",
+    url: lang === 'es' ? "/contact" : "/en/contact",
   },
 ];
 
@@ -51,6 +57,8 @@ const currentPath = Astro.url.pathname;
         </a>
       ))
     }
+    <div class="border-l border-gray-600 h-6 mx-1"></div>
+    <LanguageSwitcher />
   </nav>
 
   <!-- Mobile Navigation -->
@@ -90,6 +98,10 @@ const currentPath = Astro.url.pathname;
             </a>
           ))
         }
+        <div class="border-t border-gray-600 w-32 my-2"></div>
+        <div class="text-2xl">
+          <LanguageSwitcher />
+        </div>
       </nav>
     </div>
   </div>

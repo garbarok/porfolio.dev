@@ -6,7 +6,7 @@ import BlogGrid from '@components/blog/blog-grid.astro'
 import { getPublishedPosts, sortByDate } from '@/utils/blog'
 
 const allPosts = await getCollection('blog')
-const publishedPosts = sortByDate(getPublishedPosts(allPosts, 'es'))
+const publishedPosts = sortByDate(getPublishedPosts(allPosts, 'en'))
 
 const [featuredPost, ...otherPosts] = publishedPosts
 const recentPosts = otherPosts.slice(0, 3)
@@ -15,7 +15,8 @@ const remainingPosts = otherPosts.slice(3)
 
 <Layout
   title="Blog - Óscar Gallego"
-  description="Artículos sobre desarrollo web, JavaScript, TypeScript, Astro y las últimas tendencias en tecnología."
+  description="Articles about web development, JavaScript, TypeScript, Astro, and the latest technology trends."
+  lang="en"
 >
   <!-- Structured Data - Blog Collection -->
   <script
@@ -24,21 +25,21 @@ const remainingPosts = otherPosts.slice(3)
     set:html={JSON.stringify({
       '@context': 'https://schema.org',
       '@type': 'Blog',
-      name: 'Blog de Óscar Gallego',
+      name: 'Óscar Gallego Blog',
       description:
-        'Artículos sobre desarrollo web, JavaScript, TypeScript, Astro y las últimas tendencias en tecnología.',
-      url: 'https://oscargallegoruiz.com/blog',
+        'Articles about web development, JavaScript, TypeScript, Astro, and the latest technology trends.',
+      url: 'https://oscargallegoruiz.com/en/blog',
       author: {
         '@type': 'Person',
         name: 'Óscar Gallego',
         url: 'https://oscargallegoruiz.com',
       },
-      inLanguage: 'es-ES',
+      inLanguage: 'en-US',
       blogPost: publishedPosts.slice(0, 10).map((post) => ({
         '@type': 'BlogPosting',
         headline: post.data.title,
         description: post.data.description,
-        url: `https://oscargallegoruiz.com/blog/${post.id}`,
+        url: `https://oscargallegoruiz.com/en/blog/${post.id.replace('en/', '')}`,
         datePublished: post.data.pubDate.toISOString(),
         dateModified: (post.data.updatedDate || post.data.pubDate).toISOString(),
         author: {
@@ -62,14 +63,14 @@ const remainingPosts = otherPosts.slice(3)
         {
           '@type': 'ListItem',
           position: 1,
-          name: 'Inicio',
-          item: 'https://oscargallegoruiz.com',
+          name: 'Home',
+          item: 'https://oscargallegoruiz.com/en',
         },
         {
           '@type': 'ListItem',
           position: 2,
           name: 'Blog',
-          item: 'https://oscargallegoruiz.com/blog',
+          item: 'https://oscargallegoruiz.com/en/blog',
         },
       ],
     })}
@@ -78,13 +79,13 @@ const remainingPosts = otherPosts.slice(3)
 
   <section class="px-6 py-24 sm:py-32 lg:px-8">
     <div class="mx-auto max-w-2xl text-center">
-      <p class="text-base/7 font-semibold text-sky-500 dark:text-sky-400">Desarrollo Web</p>
+      <p class="text-base/7 font-semibold text-sky-500 dark:text-sky-400">Web Development</p>
       <h1 class="mt-2 text-5xl font-semibold tracking-tight text-gray-900 sm:text-7xl dark:text-white">
         Blog
       </h1>
       <p class="mt-8 text-pretty text-lg font-medium text-gray-600 sm:text-xl/8 dark:text-gray-400">
-        Comparto mi experiencia y conocimientos sobre desarrollo web, mejores
-        prácticas y las últimas tecnologías.
+        I share my experience and knowledge about web development, best
+        practices, and the latest technologies.
       </p>
     </div>
   </section>
@@ -102,8 +103,8 @@ const remainingPosts = otherPosts.slice(3)
     remainingPosts.length > 0 && (
       <BlogGrid
         posts={remainingPosts}
-        title="Más artículos"
-        description="Explora más contenido sobre desarrollo web y tecnología."
+        title="More articles"
+        description="Explore more content about web development and technology."
       />
     )
   }
@@ -113,7 +114,7 @@ const remainingPosts = otherPosts.slice(3)
       <section class="mx-auto max-w-7xl px-4 pb-24 sm:px-6 lg:px-8">
         <div class="mx-auto max-w-2xl text-center">
           <p class="text-gray-600 dark:text-gray-400">
-            No hay artículos publicados todavía. ¡Vuelve pronto!
+            No articles published yet. Come back soon!
           </p>
         </div>
       </section>
@@ -123,11 +124,11 @@ const remainingPosts = otherPosts.slice(3)
   <section class="mx-auto max-w-7xl py-24 sm:px-6 sm:py-32 lg:px-8">
     <div class="relative isolate overflow-hidden bg-gray-900 px-6 py-24 text-center shadow-2xl sm:rounded-3xl sm:px-16 dark:bg-gray-950">
       <h2 class="text-4xl font-semibold tracking-tight text-balance text-white sm:text-5xl">
-        ¿Quieres estar al día?
+        Want to stay up to date?
       </h2>
       <p class="mx-auto mt-6 max-w-xl text-pretty text-lg/8 text-gray-300">
-        Sígueme en mis redes sociales para no perderte ningún artículo y estar
-        al tanto de las últimas novedades en desarrollo web.
+        Follow me on social media to not miss any article and stay
+        updated on the latest news in web development.
       </p>
       <nav class="mt-10 flex items-center justify-center gap-x-6" aria-label="Social media links">
         <a
@@ -136,7 +137,7 @@ const remainingPosts = otherPosts.slice(3)
           rel="noopener noreferrer"
           class="rounded-md bg-white px-3.5 py-2.5 text-sm font-semibold text-gray-900 shadow-sm transition-colors hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
         >
-          Ver GitHub
+          View GitHub
         </a>
         <a
           href="https://www.linkedin.com/in/oscargallegoruiz/"
@@ -144,7 +145,7 @@ const remainingPosts = otherPosts.slice(3)
           rel="noopener noreferrer"
           class="text-sm/6 font-semibold text-white transition-colors hover:text-gray-300"
         >
-          Conectar en LinkedIn <span aria-hidden="true">→</span>
+          Connect on LinkedIn <span aria-hidden="true">→</span>
         </a>
       </nav>
       <svg

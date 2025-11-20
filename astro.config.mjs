@@ -8,8 +8,20 @@ import AutoImport from "astro-auto-import";
 import remarkToc from "remark-toc";
 import remarkCollapse from "remark-collapse";
 
+import vercel from "@astrojs/vercel";
+
 // https://astro.build/config
 export default defineConfig({
+  output: "static",
+
+  i18n: {
+    defaultLocale: "es",
+    locales: ["es", "en"],
+    routing: {
+      prefixDefaultLocale: false,
+    },
+  },
+
   integrations: [
     robotsTxt(),
     sitemap({
@@ -17,18 +29,33 @@ export default defineConfig({
       changefreq: "weekly",
       priority: 0.7,
       lastmod: new Date(),
+      i18n: {
+        defaultLocale: "es",
+        locales: {
+          es: "es",
+          en: "en",
+        },
+      },
       customPages: [
         "https://oscargallegoruiz.com/",
         "https://oscargallegoruiz.com/blog/",
+        "https://oscargallegoruiz.com/en/",
+        "https://oscargallegoruiz.com/en/blog/",
       ],
       serialize(item) {
         // Homepage gets highest priority
-        if (item.url === "https://oscargallegoruiz.com/") {
+        if (
+          item.url === "https://oscargallegoruiz.com/" ||
+          item.url === "https://oscargallegoruiz.com/en/"
+        ) {
           item.changefreq = "monthly";
           item.priority = 1.0;
         }
         // Blog index page
-        else if (item.url === "https://oscargallegoruiz.com/blog/") {
+        else if (
+          item.url === "https://oscargallegoruiz.com/blog/" ||
+          item.url === "https://oscargallegoruiz.com/en/blog/"
+        ) {
           item.changefreq = "weekly";
           item.priority = 0.9;
         }
@@ -46,6 +73,7 @@ export default defineConfig({
     mdx(),
     markdoc(),
   ],
+
   site: "https://oscargallegoruiz.com/",
 
   markdown: {
@@ -67,4 +95,14 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
   },
+
+  adapter: vercel({
+    webAnalytics: {
+      enabled: true,
+    },
+    imageService: true,
+    imagesConfig: {
+      sizes: [320, 640, 1280],
+    },
+  }),
 });
