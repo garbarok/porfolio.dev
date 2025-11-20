@@ -1,14 +1,14 @@
 ---
 title: "Tailwind CSS 4: Everything You Need to Know"
 description: "Explore the new features of Tailwind CSS 4 and how to leverage them in your web projects."
-pubDate: 2025-01-10
+pubDate: 2025-11-08
 author: "Óscar Gallego"
 tags: ["tailwindcss", "css", "frontend"]
 draft: false
 relatedSlug: "tailwind-css-4-novedades"
 image:
-  url: "/projects/snapcompress.webp"
-  alt: "Tailwind CSS 4 logo"
+  url: "https://res.cloudinary.com/dl0qx4iof/image/upload/blog/tailwind-css-4.png"
+  alt: "Tailwind CSS 4 performance - Rust engine optimization illustration"
 ---
 
 ## The Migration That Breaks Everything (and Why It's Worth It)

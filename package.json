@@ -7,7 +7,8 @@
     "start": "astro dev",
     "build": "astro check && astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "check:images": "tsx scripts/check-cloudinary-images.ts"
   },
   "dependencies": {
     "@astrojs/check": "0.9.5",
@@ -35,6 +36,7 @@
   "devDependencies": {
     "prettier": "3.6.2",
     "prettier-plugin-astro": "0.14.1",
-    "prettier-plugin-tailwindcss": "^0.7.1"
+    "prettier-plugin-tailwindcss": "^0.7.1",
+    "tsx": "^4.20.6"
   }
 }

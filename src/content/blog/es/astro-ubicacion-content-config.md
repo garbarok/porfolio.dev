@@ -1,14 +1,14 @@
 ---
 title: "Astro Content Collections: Por qué desaparecen tus campos del schema"
 description: "Guía de depuración: Cómo la ubicación incorrecta del archivo de configuración de contenido causa que los campos del schema desaparezcan en proyectos Astro 5."
-pubDate: 2025-01-20
+pubDate: 2025-11-18
 author: "Óscar Gallego"
 tags: ["astro", "debugging", "content collections", "typescript"]
 draft: false
 relatedSlug: "astro-content-config-location"
 image:
-  url: "/projects/snapcompress.webp"
-  alt: "Ilustración de depuración de Astro"
+  url: "https://res.cloudinary.com/dl0qx4iof/image/upload/blog/astro-debugging.png"
+  alt: "Debugging Astro - developer solving configuration issues"
 ---
 
 ## El misterio de los campos del schema que desaparecen

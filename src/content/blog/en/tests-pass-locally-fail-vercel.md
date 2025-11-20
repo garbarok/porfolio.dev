@@ -1,14 +1,14 @@
 ---
 title: "Tests Pass Locally, Fail on Vercel? Here's Why"
 description: "Understanding why your Next.js tests work perfectly on your machine but mysteriously fail on Vercel's CI environment - and how to fix it."
-pubDate: 2025-11-20
+pubDate: 2025-10-12
 author: "Óscar Gallego"
 tags: ["nextjs", "vercel", "testing", "ci-cd", "vitest", "react"]
 draft: false
 relatedSlug: "tests-localmente-fallan-vercel"
 image:
-  url: "/projects/snapcompress.webp"
-  alt: "Tests failing on Vercel CI environment"
+  url: "https://res.cloudinary.com/dl0qx4iof/image/upload/blog/vercel-tests.png"
+  alt: "Tests passing locally but failing in Vercel CI environment"
 ---
 
 ## The Problem

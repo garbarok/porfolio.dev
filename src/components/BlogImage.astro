@@ -1,0 +1,129 @@
+---
+/**
+ * BlogImage Component
+ *
+ * Renders optimized blog images from Cloudinary with responsive srcset,
+ * lazy loading, and proper aspect ratios.
+ *
+ * @example
+ * ```astro
+ * <BlogImage
+ *   slug="introduccion-astro-5"
+ *   alt="Astro 5 framework illustration"
+ * />
+ * ```
+ */
+
+import { getBlogPostImage, getCloudinarySrcset, BLOG_IMAGES } from '@/utils/cloudinary';
+
+interface Props {
+  /** Blog post slug to fetch the image */
+  slug: string;
+  /** Alt text for the image */
+  alt: string;
+  /** Image preset: 'original' (default, no transformations) | 'hero' | 'thumbnail' | 'og' */
+  preset?: 'original' | 'hero' | 'thumbnail' | 'og';
+  /** Additional CSS classes */
+  class?: string;
+  /** Loading strategy: 'lazy' (default) or 'eager' */
+  loading?: 'lazy' | 'eager';
+  /** Whether to show caption */
+  showCaption?: boolean;
+  /** Optional custom caption */
+  caption?: string;
+}
+
+const {
+  slug,
+  alt,
+  preset = 'original',
+  class: className = '',
+  loading = 'lazy',
+  showCaption = false,
+  caption,
+} = Astro.props;
+
+const publicId = BLOG_IMAGES[slug as keyof typeof BLOG_IMAGES];
+const src = getBlogPostImage(slug, preset);
+
+// Only generate srcset if using transformations (not for 'original' preset)
+const srcset = publicId && preset !== 'original'
+  ? getCloudinarySrcset(publicId, [400, 800, 1200, 1600], {
+      quality: 'auto',
+      format: 'auto',
+      crop: 'limit',
+    })
+  : undefined;
+
+// Responsive sizes based on preset
+const sizes = preset === 'thumbnail'
+  ? '(max-width: 640px) 100vw, (max-width: 768px) 50vw, 400px'
+  : '(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px';
+---
+
+<figure class:list={['blog-image-wrapper', className]}>
+  <img
+    src={src}
+    srcset={srcset}
+    sizes={sizes}
+    alt={alt}
+    loading={loading}
+    decoding="async"
+    class:list={[
+      'blog-image',
+      {
+        'blog-image-hero': preset === 'hero',
+        'blog-image-thumbnail': preset === 'thumbnail',
+      }
+    ]}
+  />
+  {showCaption && (
+    <figcaption class="blog-image-caption">
+      {caption || alt}
+    </figcaption>
+  )}
+</figure>
+
+<style>
+  .blog-image-wrapper {
+    margin: 0;
+    width: 100%;
+  }
+
+  .blog-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  }
+
+  .blog-image-hero {
+    aspect-ratio: 1200 / 630;
+    object-fit: cover;
+  }
+
+  .blog-image-thumbnail {
+    aspect-ratio: 400 / 210;
+    object-fit: cover;
+  }
+
+  .blog-image-caption {
+    margin-top: 0.5rem;
+    text-align: center;
+    font-size: 0.875rem;
+    color: rgb(107 114 128);
+  }
+
+  :global(.dark) .blog-image-caption {
+    color: rgb(156 163 175);
+  }
+
+  .blog-image {
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .blog-image:hover {
+    transform: scale(1.02);
+  }
+</style>

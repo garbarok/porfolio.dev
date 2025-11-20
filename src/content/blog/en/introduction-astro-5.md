@@ -1,12 +1,12 @@
 ---
 title: "Introduction to Astro 5: The Framework of the Future"
 description: "Discover the new features of Astro 5 and why it's the best framework for building fast, modern websites."
-pubDate: 2025-01-15
+pubDate: 2025-11-15
 author: "Óscar Gallego"
 tags: ["astro", "web development", "javascript"]
 image:
-  url: "/projects/snapcompress.webp"
-  alt: "Astro 5 logo"
+  url: "https://res.cloudinary.com/dl0qx4iof/image/upload/blog/astro-introduction.png"
+  alt: "Astro 5 framework - rocket illustration with zero JavaScript concept"
 draft: false
 relatedSlug: "introduccion-astro-5"
 ---

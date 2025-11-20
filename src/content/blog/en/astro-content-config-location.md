@@ -1,14 +1,14 @@
 ---
 title: "Astro Content Collections: Why Your Schema Fields Are Missing"
 description: "Debugging guide: How incorrect content config file location causes schema fields to disappear in Astro 5 projects."
-pubDate: 2025-01-20
+pubDate: 2025-11-18
 author: "Óscar Gallego"
 tags: ["astro", "debugging", "content collections", "typescript"]
 draft: false
 relatedSlug: "astro-ubicacion-content-config"
 image:
-  url: "/projects/snapcompress.webp"
-  alt: "Astro debugging illustration"
+  url: "https://res.cloudinary.com/dl0qx4iof/image/upload/blog/astro-debugging.png"
+  alt: "Debugging Astro - developer solving configuration issues"
 ---
 
 ## The Mystery of the Disappearing Schema Fields

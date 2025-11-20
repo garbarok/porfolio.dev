@@ -1,14 +1,14 @@
 ---
 title: "TypeScript: Mejores prácticas para proyectos profesionales"
 description: "Guía completa de mejores prácticas de TypeScript para escribir código más seguro y mantenible."
-pubDate: 2025-01-05
+pubDate: 2025-10-25
 author: "Óscar Gallego"
 tags: ["typescript", "javascript", "best practices"]
 draft: false
 relatedSlug: "typescript-best-practices"
 image:
-  url: "/projects/snapcompress.webp"
-  alt: "TypeScript logo"
+  url: "https://res.cloudinary.com/dl0qx4iof/image/upload/blog/typescript-best-practices.png"
+  alt: "TypeScript type safety - shield protecting code from bugs"
 ---
 
 ## El costo real de no usar TypeScript
