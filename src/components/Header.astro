@@ -33,8 +33,9 @@ const currentPath = Astro.url.pathname;
 <header
   class="fixed top-0 z-10 mx-auto mt-2 flex w-full items-center justify-center"
 >
+  <!-- Desktop Navigation -->
   <nav
-    class="flex items-center justify-center gap-x-2 rounded-full px-3 py-2 text-sm font-medium text-white shadow-lg backdrop-blur-md"
+    class="hidden md:flex items-center justify-center gap-x-2 rounded-full px-3 py-2 text-sm font-medium text-white shadow-lg backdrop-blur-md"
   >
     {
       navItems.map((link) => (
@@ -51,10 +52,92 @@ const currentPath = Astro.url.pathname;
       ))
     }
   </nav>
+
+  <!-- Mobile Navigation -->
+  <div class="md:hidden">
+    <!-- Hamburger Button -->
+    <button
+      id="mobile-menu-button"
+      class="flex items-center justify-center rounded-full bg-gray-900 p-3 text-white shadow-lg backdrop-blur-md hover:bg-gray-800 transition"
+      aria-label="Toggle menu"
+      aria-expanded="false"
+    >
+      <svg id="menu-icon" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+      </svg>
+      <svg id="close-icon" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
+
+    <!-- Mobile Menu Overlay -->
+    <div
+      id="mobile-menu"
+      class="fixed inset-0 top-16 bg-gray-900/95 backdrop-blur-lg hidden"
+    >
+      <nav class="flex flex-col items-center gap-6 p-8">
+        {
+          navItems.map((link) => (
+            <a
+              class:list={[
+                "text-2xl font-medium text-white transition hover:text-blue-500 py-3 px-6 min-h-[48px] flex items-center",
+                { "text-blue-500": currentPath === link.url || (currentPath.startsWith(link.url) && link.url !== "/") }
+              ]}
+              aria-label={link.label}
+              href={link.url}
+            >
+              {link.title}
+            </a>
+          ))
+        }
+      </nav>
+    </div>
+  </div>
 </header>
 
 <script>
   document.addEventListener("astro:page-load", () => {
+    // Mobile menu toggle
+    const mobileMenuButton = document.getElementById("mobile-menu-button");
+    const mobileMenu = document.getElementById("mobile-menu");
+    const menuIcon = document.getElementById("menu-icon");
+    const closeIcon = document.getElementById("close-icon");
+    const mobileMenuLinks = document.querySelectorAll("#mobile-menu a");
+
+    if (mobileMenuButton && mobileMenu && menuIcon && closeIcon) {
+      const toggleMenu = () => {
+        const isHidden = mobileMenu.classList.contains("hidden");
+        mobileMenu.classList.toggle("hidden");
+        menuIcon.classList.toggle("hidden");
+        closeIcon.classList.toggle("hidden");
+        mobileMenuButton.setAttribute("aria-expanded", isHidden ? "true" : "false");
+        
+        // Prevent body scroll when menu is open
+        document.body.style.overflow = isHidden ? "hidden" : "";
+      };
+
+      mobileMenuButton.addEventListener("click", toggleMenu);
+
+      // Close menu when clicking on a link
+      mobileMenuLinks.forEach((link) => {
+        link.addEventListener("click", () => {
+          mobileMenu.classList.add("hidden");
+          menuIcon.classList.remove("hidden");
+          closeIcon.classList.add("hidden");
+          mobileMenuButton.setAttribute("aria-expanded", "false");
+          document.body.style.overflow = "";
+        });
+      });
+
+      // Close menu when clicking outside
+      mobileMenu.addEventListener("click", (e) => {
+        if (e.target === mobileMenu) {
+          toggleMenu();
+        }
+      });
+    }
+
+    // Desktop navigation - section highlighting
     const sections = document.querySelectorAll("section");
     const navItems = document.querySelectorAll("header nav a");
     const isHomePage = window.location.pathname === "/";
