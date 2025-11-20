@@ -6,6 +6,7 @@
  * PUBLIC_GA_MEASUREMENT_ID=G-XXXXXXXXXX
  *
  * This component uses Partytown for optimized third-party script loading
+ * and includes View Transitions support for SPA-style navigation tracking
  */
 
 const GA_MEASUREMENT_ID = import.meta.env.PUBLIC_GA_MEASUREMENT_ID
@@ -18,20 +19,40 @@ const shouldLoadGA = isProduction && GA_MEASUREMENT_ID
 {
   shouldLoadGA && (
     <>
+      <!-- Initialize dataLayer before loading gtag.js -->
+      <script is:inline>
+        window.dataLayer = window.dataLayer || [];
+      </script>
+
       <!-- Google tag (gtag.js) with Partytown -->
       <script
         is:inline
         type="text/partytown"
         src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
       />
-      <script is:inline type="text/partytown" define:vars={{ GA_MEASUREMENT_ID }}>
+
+      <!-- Configure Google Analytics with Partytown -->
+      <script is:inline type="text/partytown" set:html={`
         window.dataLayer = window.dataLayer || [];
         function gtag() {
           dataLayer.push(arguments);
         }
         gtag("js", new Date());
-        gtag("config", GA_MEASUREMENT_ID, {
+        gtag("config", "${GA_MEASUREMENT_ID}", {
           page_path: window.location.pathname,
+        });
+      `} />
+
+      <!-- View Transitions Support: Track page views on navigation -->
+      <script is:inline>
+        document.addEventListener('astro:page-load', () => {
+          if (typeof gtag !== 'undefined') {
+            gtag('event', 'page_view', {
+              page_path: window.location.pathname,
+              page_title: document.title,
+              page_location: window.location.href
+            });
+          }
         });
       </script>
     </>

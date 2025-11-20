@@ -1,0 +1,245 @@
+---
+/**
+ * Responsive Table Component
+ *
+ * A reusable table wrapper component that provides enhanced responsive behavior
+ * on mobile devices through horizontal scrolling with visual scroll indicators.
+ *
+ * Features:
+ * - Horizontal scroll on mobile/tablet with smooth touch support
+ * - Visual scroll indicators (gradient shadows) to show more content
+ * - Custom styled scrollbar matching the design system
+ * - Full-width on desktop
+ * - Accessible keyboard navigation
+ * - Dark mode support
+ *
+ * NOTE: For markdown-rendered tables in blog posts, responsive behavior is
+ * automatically handled by CSS in article-content.astro. This component is
+ * for advanced use cases where you need visual scroll indicators.
+ *
+ * Usage in .astro files:
+ * ```astro
+ * import Table from '@/components/blog/Table.astro';
+ *
+ * <Table>
+ *   <table>
+ *     <thead>
+ *       <tr>
+ *         <th>Column 1</th>
+ *         <th>Column 2</th>
+ *       </tr>
+ *     </thead>
+ *     <tbody>
+ *       <tr>
+ *         <td>Data 1</td>
+ *         <td>Data 2</td>
+ *       </tr>
+ *     </tbody>
+ *   </table>
+ * </Table>
+ * ```
+ *
+ * For markdown tables in blog posts:
+ * ```markdown
+ * | Column 1 | Column 2 |
+ * |----------|----------|
+ * | Data 1   | Data 2   |
+ * ```
+ * These will automatically be responsive without needing this component.
+ */
+---
+
+<div class="table-wrapper">
+  <div class="table-container">
+    <slot />
+  </div>
+  <div class="scroll-indicator scroll-indicator-left" aria-hidden="true"></div>
+  <div class="scroll-indicator scroll-indicator-right" aria-hidden="true"></div>
+</div>
+
+<script>
+  // Add scroll indicators based on scroll position
+  function updateScrollIndicators() {
+    const containers = document.querySelectorAll('.table-container');
+
+    containers.forEach((container) => {
+      const wrapper = container.parentElement;
+      if (!wrapper) return;
+
+      const leftIndicator = wrapper.querySelector('.scroll-indicator-left');
+      const rightIndicator = wrapper.querySelector('.scroll-indicator-right');
+
+      const scrollLeft = container.scrollLeft;
+      const scrollWidth = container.scrollWidth;
+      const clientWidth = container.clientWidth;
+      const maxScroll = scrollWidth - clientWidth;
+
+      // Show left indicator if scrolled from start
+      if (scrollLeft > 10) {
+        leftIndicator?.classList.add('visible');
+      } else {
+        leftIndicator?.classList.remove('visible');
+      }
+
+      // Show right indicator if not at end
+      if (scrollLeft < maxScroll - 10) {
+        rightIndicator?.classList.add('visible');
+      } else {
+        rightIndicator?.classList.remove('visible');
+      }
+    });
+  }
+
+  // Initialize on page load
+  document.addEventListener('DOMContentLoaded', () => {
+    updateScrollIndicators();
+
+    // Update on scroll
+    const containers = document.querySelectorAll('.table-container');
+    containers.forEach((container) => {
+      container.addEventListener('scroll', updateScrollIndicators);
+    });
+
+    // Update on resize
+    window.addEventListener('resize', updateScrollIndicators);
+  });
+
+  // Re-initialize when navigating (for SPA-like behavior)
+  document.addEventListener('astro:page-load', () => {
+    updateScrollIndicators();
+
+    const containers = document.querySelectorAll('.table-container');
+    containers.forEach((container) => {
+      container.addEventListener('scroll', updateScrollIndicators);
+    });
+  });
+</script>
+
+<style>
+  .table-wrapper {
+    position: relative;
+    width: 100%;
+    margin: 3rem 0;
+  }
+
+  .table-container {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    /* Smooth scrolling */
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+
+    /* Custom scrollbar styles */
+    scrollbar-width: thin;
+    scrollbar-color: rgb(156 163 175) rgb(243 244 246);
+  }
+
+  /* Webkit scrollbar styles */
+  .table-container::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  .table-container::-webkit-scrollbar-track {
+    background: rgb(243 244 246);
+    border-radius: 4px;
+  }
+
+  .table-container::-webkit-scrollbar-thumb {
+    background: rgb(156 163 175);
+    border-radius: 4px;
+  }
+
+  .table-container::-webkit-scrollbar-thumb:hover {
+    background: rgb(107 114 128);
+  }
+
+  /* Dark mode scrollbar */
+  :global(.dark) .table-container {
+    scrollbar-color: rgb(75 85 99) rgb(31 41 55);
+  }
+
+  :global(.dark) .table-container::-webkit-scrollbar-track {
+    background: rgb(31 41 55);
+  }
+
+  :global(.dark) .table-container::-webkit-scrollbar-thumb {
+    background: rgb(75 85 99);
+  }
+
+  :global(.dark) .table-container::-webkit-scrollbar-thumb:hover {
+    background: rgb(107 114 128);
+  }
+
+  /* Scroll indicators (shadows on edges) */
+  .scroll-indicator {
+    position: absolute;
+    top: 0;
+    bottom: 20px; /* Account for scrollbar height */
+    width: 40px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1;
+  }
+
+  .scroll-indicator-left {
+    left: 0;
+    background: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0.9),
+      rgba(255, 255, 255, 0)
+    );
+  }
+
+  .scroll-indicator-right {
+    right: 0;
+    background: linear-gradient(
+      to left,
+      rgba(255, 255, 255, 0.9),
+      rgba(255, 255, 255, 0)
+    );
+  }
+
+  /* Dark mode indicators */
+  :global(.dark) .scroll-indicator-left {
+    background: linear-gradient(
+      to right,
+      rgba(17, 24, 39, 0.9),
+      rgba(17, 24, 39, 0)
+    );
+  }
+
+  :global(.dark) .scroll-indicator-right {
+    background: linear-gradient(
+      to left,
+      rgba(17, 24, 39, 0.9),
+      rgba(17, 24, 39, 0)
+    );
+  }
+
+  /* Show indicators on mobile/tablet */
+  @media (max-width: 1024px) {
+    .scroll-indicator.visible {
+      opacity: 1;
+    }
+
+    /* Show right indicator by default */
+    .scroll-indicator-right {
+      opacity: 0.6;
+    }
+  }
+
+  /* Ensure table inside takes full width */
+  .table-container :global(table) {
+    min-width: 100%;
+    margin: 0;
+  }
+
+  /* Add some padding on mobile for better touch scrolling */
+  @media (max-width: 768px) {
+    .table-container {
+      padding: 0 0.5rem;
+    }
+  }
+</style>

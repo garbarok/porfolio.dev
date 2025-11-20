@@ -211,13 +211,9 @@ const { Content } = Astro.props;
     margin-top: 1rem;
   }
 
-  /* Tables - Mobile Responsive with Wrapper */
+  /* Tables - Enhanced Mobile Responsive with Custom Scrollbars */
   .blog-content table {
-    @apply w-full border-collapse shadow-xl rounded-xl overflow-hidden;
-  }
-
-  /* Create a wrapper div around tables for scroll */
-  .blog-content > :global(table) {
+    @apply w-full border-collapse shadow-xl rounded-xl;
     margin: 3rem 0;
   }
 
@@ -228,46 +224,105 @@ const { Content } = Astro.props;
   .blog-content th {
     @apply font-bold p-5 text-left text-gray-900 dark:text-white;
     @apply border-b-2 border-gray-300 dark:border-gray-700;
-    white-space: nowrap;
+    white-space: nowrap; /* Prevent header text wrapping */
   }
 
   .blog-content td {
     @apply p-5 border-t border-gray-200 dark:border-gray-700;
     @apply bg-white dark:bg-gray-900/50;
+    white-space: nowrap; /* Prevent cell text wrapping */
   }
 
   .blog-content tr {
     @apply transition-colors;
   }
 
-  .blog-content tr:hover {
+  .blog-content tbody tr:hover {
     @apply bg-gray-50 dark:bg-gray-800/50;
   }
 
-  /* Mobile-specific table styling */
-  @media (max-width: 768px) {
+  /* Mobile and tablet responsive behavior */
+  @media (max-width: 1024px) {
     .blog-content table {
       display: block;
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
+      width: max-content;
       max-width: 100%;
-      font-size: 0.875rem;
+      min-width: 100%;
+
+      /* Custom scrollbar styling */
+      scrollbar-width: thin;
+      scrollbar-color: rgb(156 163 175) rgb(243 244 246);
     }
 
-    .blog-content thead,
+    /* Dark mode scrollbar */
+    :global(.dark) .blog-content table {
+      scrollbar-color: rgb(75 85 99) rgb(31 41 55);
+    }
+
+    /* Webkit scrollbar styles */
+    .blog-content table::-webkit-scrollbar {
+      height: 10px;
+    }
+
+    .blog-content table::-webkit-scrollbar-track {
+      background: rgb(243 244 246);
+      border-radius: 5px;
+    }
+
+    :global(.dark) .blog-content table::-webkit-scrollbar-track {
+      background: rgb(31 41 55);
+    }
+
+    .blog-content table::-webkit-scrollbar-thumb {
+      background: rgb(156 163 175);
+      border-radius: 5px;
+      border: 2px solid rgb(243 244 246);
+    }
+
+    .blog-content table::-webkit-scrollbar-thumb:hover {
+      background: rgb(107 114 128);
+    }
+
+    :global(.dark) .blog-content table::-webkit-scrollbar-thumb {
+      background: rgb(75 85 99);
+      border: 2px solid rgb(31 41 55);
+    }
+
+    :global(.dark) .blog-content table::-webkit-scrollbar-thumb:hover {
+      background: rgb(107 114 128);
+    }
+
+    /* Ensure table structure is maintained with natural width */
+    .blog-content thead {
+      display: table-header-group;
+      width: auto;
+    }
+
     .blog-content tbody {
-      display: block;
+      display: table-row-group;
+      width: auto;
     }
 
     .blog-content tr {
-      display: table;
-      width: 100%;
-      table-layout: auto;
+      display: table-row;
     }
 
     .blog-content th,
     .blog-content td {
       display: table-cell;
+    }
+  }
+
+  /* Smaller screens - reduce padding and font size */
+  @media (max-width: 768px) {
+    .blog-content table {
+      font-size: 0.875rem;
+    }
+
+    .blog-content th,
+    .blog-content td {
       padding: 0.875rem;
     }
   }

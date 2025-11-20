@@ -41,7 +41,14 @@ export default defineConfig({
         return item;
       },
     }),
-    partytown(),
+    partytown({
+      config: {
+        forward: ["dataLayer.push"],
+        // Debug mode is automatically enabled in dev/preview modes
+        // Set to true in production only for troubleshooting
+        debug: false,
+      },
+    }),
     AutoImport({
       imports: [],
     }),

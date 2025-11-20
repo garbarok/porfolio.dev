@@ -44,6 +44,10 @@ const socialImage = new URL(image, SITE_URL).href
   <head>
     <!-- Basic Meta Tags -->
     <meta charset="UTF-8" />
+
+    <!-- Google Analytics (early load for better tracking) -->
+    <GoogleAnalytics />
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
     <meta name="author" content={AUTHOR_NAME} />
@@ -215,7 +219,6 @@ const socialImage = new URL(image, SITE_URL).href
     <slot />
 
     <Footer />
-    <GoogleAnalytics />
     <script>
       import '../scripts/botid'
     </script>
