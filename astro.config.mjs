@@ -43,8 +43,7 @@ export default defineConfig({
     }),
     partytown({
       config: {
-        forward: ["dataLayer.push", "gtag"],
-        debug: true, // Enable debug logging in production
+        forward: ["dataLayer.push"],
       },
     }),
     AutoImport({
