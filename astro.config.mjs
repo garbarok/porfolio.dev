@@ -4,7 +4,6 @@ import sitemap from "@astrojs/sitemap";
 import mdx from "@astrojs/mdx";
 import markdoc from "@astrojs/markdoc";
 import tailwindcss from "@tailwindcss/vite";
-import AutoImport from "astro-auto-import";
 import remarkToc from "remark-toc";
 import remarkCollapse from "remark-collapse";
 
@@ -66,9 +65,6 @@ export default defineConfig({
         }
         return item;
       },
-    }),
-    AutoImport({
-      imports: [],
     }),
     mdx(),
     markdoc(),
