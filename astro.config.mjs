@@ -1,7 +1,6 @@
 import { defineConfig } from "astro/config";
 import robotsTxt from "astro-robots-txt";
 import sitemap from "@astrojs/sitemap";
-import partytown from "@astrojs/partytown";
 import mdx from "@astrojs/mdx";
 import markdoc from "@astrojs/markdoc";
 import tailwindcss from "@tailwindcss/vite";
@@ -39,11 +38,6 @@ export default defineConfig({
           item.priority = 0.8;
         }
         return item;
-      },
-    }),
-    partytown({
-      config: {
-        forward: ["dataLayer.push"],
       },
     }),
     AutoImport({

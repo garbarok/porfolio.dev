@@ -1,64 +1,35 @@
 ---
 /**
  * Google Analytics 4 Component
- *
- * This component uses Partytown for optimized third-party script loading.
- * GA4 provides proper CORS headers, so no proxying is needed.
- *
- * Note: Includes View Transitions support for SPA-style navigation tracking
+ * Standard implementation for reliable production deployment
  */
 
 const GA_MEASUREMENT_ID = 'G-1J62NRCJ10'
-
-// Only load GA in production
 const isProduction = import.meta.env.PROD
-const shouldLoadGA = isProduction
 ---
 
-{
-  shouldLoadGA && (
-    <>
-      <!-- Google tag (gtag.js) with Partytown -->
-      <script
-        is:inline
-        type="text/partytown"
-        async
-        src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-      />
+{isProduction && (
+  <>
+    <!-- Google tag (gtag.js) -->
+    <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}></script>
+    <script is:inline set:html={`
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', '${GA_MEASUREMENT_ID}');
+    `} />
 
-      <!-- Configure Google Analytics with Partytown -->
-      <script is:inline type="text/partytown" set:html={`
-        window.dataLayer = window.dataLayer || [];
-        window.gtag = function gtag() {
-          dataLayer.push(arguments);
-        };
-        gtag('js', new Date());
-        gtag('config', '${GA_MEASUREMENT_ID}');
-      `} />
-
-      <!-- View Transitions Support: Track page views on navigation -->
-      <script is:inline>
-        document.addEventListener('astro:page-load', () => {
-          if (typeof window.gtag !== 'undefined') {
-            window.gtag('event', 'page_view', {
-              page_path: window.location.pathname,
-              page_title: document.title,
-              page_location: window.location.href
-            });
-          }
-        });
-      </script>
-    </>
-  )
-}
-
-<!-- Development mode indicator (only visible in dev) -->
-{
-  !isProduction && (
-    <script>
-      console.log(
-        "📊 Google Analytics is disabled in development mode",
-      );
+    <!-- View Transitions Support -->
+    <script is:inline>
+      document.addEventListener('astro:page-load', () => {
+        if (typeof gtag !== 'undefined') {
+          gtag('event', 'page_view', {
+            page_path: window.location.pathname,
+            page_title: document.title,
+            page_location: window.location.href
+          });
+        }
+      });
     </script>
-  )
-}
+  </>
+)}
