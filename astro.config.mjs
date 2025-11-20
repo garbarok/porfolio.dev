@@ -92,13 +92,5 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
 
-  adapter: vercel({
-    webAnalytics: {
-      enabled: true,
-    },
-    imageService: true,
-    imagesConfig: {
-      sizes: [320, 640, 1280],
-    },
-  }),
+  adapter: vercel(),
 });
