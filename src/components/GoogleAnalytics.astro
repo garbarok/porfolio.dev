@@ -1,26 +1,46 @@
 ---
-/**
- * Google Analytics 4 Component
- * Standard implementation for reliable production deployment
- */
-
 const GA_MEASUREMENT_ID = 'G-1J62NRCJ10'
 const isProduction = import.meta.env.PROD
 ---
 
 {isProduction && (
   <>
-    <!-- Google tag (gtag.js) -->
-    <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}></script>
-    <script is:inline set:html={`
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', '${GA_MEASUREMENT_ID}');
-    `} />
+    <script is:inline define:vars={{ GA_MEASUREMENT_ID }}>
+      // Load gtag.js with Promise
+      function loadGoogleAnalytics() {
+        return new Promise((resolve, reject) => {
+          const script = document.createElement('script');
+          script.async = true;
+          script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
+          script.onload = resolve;
+          script.onerror = reject;
+          document.head.appendChild(script);
+        });
+      }
 
-    <!-- View Transitions Support -->
-    <script is:inline>
+      // Initialize GA4 after script loads
+      async function initGA() {
+        try {
+          await loadGoogleAnalytics();
+          
+          // Now gtag.js is loaded, safe to configure
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          window.gtag = gtag; // Make globally accessible
+          
+          gtag('js', new Date());
+          gtag('config', GA_MEASUREMENT_ID);
+          
+          console.log('✅ GA4 initialized successfully');
+        } catch (error) {
+          console.error('❌ GA4 failed to load:', error);
+        }
+      }
+
+      // Start initialization
+      initGA();
+
+      // View Transitions Support
       document.addEventListener('astro:page-load', () => {
         if (typeof gtag !== 'undefined') {
           gtag('event', 'page_view', {
