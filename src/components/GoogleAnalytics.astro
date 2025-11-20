@@ -19,22 +19,39 @@ const shouldLoadGA = isProduction && GA_MEASUREMENT_ID
 {
   shouldLoadGA && (
     <>
-      <!-- Partytown Proxy Configuration -->
+      <!-- Partytown Proxy Configuration with Debug Logging -->
       <script is:inline set:html={`
+        console.log('[GA Debug] Initializing Partytown proxy configuration');
+
         window.partytown = window.partytown || {};
-        window.partytown.resolveUrl = function(url, location) {
-          // Proxy Google Tag Manager scripts through Vercel
-          if (url.hostname === "www.googletagmanager.com") {
-            var proxyUrl = new URL(location.origin + "/proxy/gtag" + url.pathname + url.search);
-            return proxyUrl;
+        window.partytown.resolveUrl = function(url, location, type) {
+          console.log('[GA Debug] resolveUrl called:', {
+            originalUrl: url.href,
+            hostname: url.hostname,
+            type: type,
+            location: location.origin
+          });
+
+          if (type === "script") {
+            // Proxy Google Tag Manager scripts through Vercel
+            if (url.hostname === "www.googletagmanager.com") {
+              var proxyUrl = new URL(location.origin + "/proxy/gtag" + url.pathname + url.search);
+              console.log('[GA Debug] Proxying GTM:', url.href, '→', proxyUrl.href);
+              return proxyUrl;
+            }
+            // Proxy Google Analytics scripts through Vercel
+            if (url.hostname === "www.google-analytics.com") {
+              var proxyUrl = new URL(location.origin + "/proxy/analytics" + url.pathname + url.search);
+              console.log('[GA Debug] Proxying Analytics:', url.href, '→', proxyUrl.href);
+              return proxyUrl;
+            }
           }
-          // Proxy Google Analytics scripts through Vercel
-          if (url.hostname === "www.google-analytics.com") {
-            var proxyUrl = new URL(location.origin + "/proxy/analytics" + url.pathname + url.search);
-            return proxyUrl;
-          }
+
+          console.log('[GA Debug] No proxy needed, returning original URL');
           return url;
         };
+
+        console.log('[GA Debug] Partytown configuration complete');
       `} />
 
       <!-- Google tag (gtag.js) with Partytown -->
@@ -46,25 +63,46 @@ const shouldLoadGA = isProduction && GA_MEASUREMENT_ID
 
       <!-- Configure Google Analytics with Partytown -->
       <script is:inline type="text/partytown" set:html={`
+        console.log('[GA Debug] Initializing gtag with ID: ${GA_MEASUREMENT_ID}');
+
         window.dataLayer = window.dataLayer || [];
         function gtag() {
+          console.log('[GA Debug] gtag called with:', arguments);
           dataLayer.push(arguments);
         }
+
         gtag("js", new Date());
         gtag("config", "${GA_MEASUREMENT_ID}");
+
+        console.log('[GA Debug] gtag configuration complete');
       `} />
 
       <!-- View Transitions Support: Track page views on navigation -->
       <script is:inline>
+        console.log('[GA Debug] Setting up View Transitions tracking');
+
         document.addEventListener('astro:page-load', () => {
+          console.log('[GA Debug] astro:page-load event fired');
+          console.log('[GA Debug] gtag available:', typeof gtag !== 'undefined');
+
           if (typeof gtag !== 'undefined') {
+            console.log('[GA Debug] Sending page_view event:', {
+              page_path: window.location.pathname,
+              page_title: document.title,
+              page_location: window.location.href
+            });
+
             gtag('event', 'page_view', {
               page_path: window.location.pathname,
               page_title: document.title,
               page_location: window.location.href
             });
+          } else {
+            console.warn('[GA Debug] gtag not available for View Transitions tracking');
           }
         });
+
+        console.log('[GA Debug] View Transitions tracking setup complete');
       </script>
     </>
   )
