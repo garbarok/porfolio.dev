@@ -2,40 +2,40 @@
 import ExperienceItem from "./ExperienceItem.astro";
 const EXPERIENCE = [
   {
-    date: "Agosto 2024 - Marzo 2025",
-    title: "Fullstack Developer",
-    company: "Mavelpoint",
+    date: "Mayo 2025 - Actualidad",
+    title: "Ingeniero de Software",
+    company: "Rindus (para Stibo DX)",
     description:
-      "Desarrollé una plataforma pública y una aplicación SaaS utilizando Astro y Next.js (TypeScript). Implementé autenticación con Clerk, reduciendo errores de autenticación. Optimicé la arquitectura backend con NestJS (Clean Architecture), mejorando los tiempos de respuesta de la API en un 25%.",
+      "Desarrollo de aplicaciones empresariales con Angular 18/19 para Stibo DX. Implementación de arquitecturas frontend escalables, componentes reutilizables y gestión avanzada del estado. Colaboración en equipos multiculturales en modalidad remota, aplicando mejores prácticas de desarrollo y código limpio.",
+  },
+  {
+    date: "Agosto 2024 - Marzo 2025",
+    title: "Software Developer",
+    company: "MavelPoint",
+    description:
+      "Diseñé y optimicé aplicaciones con Next.js y Astro, mejorando velocidad de carga y experiencia de usuario. Implementé arquitecturas UI modulares con Zustand, reduciendo duplicación de código. Colaboré en backend con NestJS y Express, optimizando APIs REST. Gestioné bases de datos PostgreSQL con Prisma ORM, reduciendo tiempos de respuesta. Aseguré autenticación con Clerk y colaboré con diseñadores en Figma.",
   },
   {
     date: "Enero 2024 - Agosto 2024",
-    title: "Fullstack Developer",
+    title: "Software Developer",
     company: "Check-in Scan",
     description:
-      "Desarrollé una aplicación web híbrida con Next.js y React. Diseñé y desplegué microservicios en NestJS, mejorando la eficiencia en el manejo de datos externos en un 20%. Automatizé el intercambio de datos con agencias gubernamentales.",
+      "Desarrollé aplicación híbrida en Expo (React y React Native) para desktop y móviles. Construí plataforma de pagos en Next.js con integración de Stripe para automatización de suscripciones. Implementé API en NestJS (Fastify) para comunicación con ISTAT Italia, enviando datos turísticos en JSON. Mejoré sincronización de datos con Redux y React Query. Aseguré interacciones con OAuth y JWT.",
   },
   {
     date: "Abril 2022 - Noviembre 2023",
     title: "Junior Web Developer",
     company: "AddComm",
     description:
-      "Resolví más de 500 tickets de soporte al cliente, mejorando el tiempo de respuesta en un 40%. Colaboré en la implementación de mejoras en PHP y JavaScript.",
-  },
-  {
-    date: "2021 - 2022",
-    title: "Desarrollador Web",
-    company: "Freelance",
-    description:
-      "Trabajé en diversos proyectos independientes, desarrollando aplicaciones web personalizadas y optimizando el rendimiento de sitios web existentes.",
+      "Automaticé procesos de integración de APIs y transformación de datos en Flowize (Low-Code), optimizando eficiencia en operaciones empresariales. Colaboré en equipo híbrido en Málaga, desarrollando soluciones para múltiples clientes.",
   },
 ];
 ---
 
-<ol class="relative mt-16">
+<ol class="relative mt-16" role="list" aria-label="Experiencia laboral">
   {
     EXPERIENCE.map((experience) => (
-      <li class="">
+      <li>
         <ExperienceItem {...experience} />
       </li>
     ))

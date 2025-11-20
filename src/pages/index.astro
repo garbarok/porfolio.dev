@@ -1,20 +1,22 @@
 ---
-import Layout from "@/layouts/Layout.astro";
+import Layout from "@layouts/Layout.astro";
 
-import AboutMe from "@/components/AboutMe.astro";
-import Briefcase from "@/components/icons/Briefcase.astro";
-import CodeIcon from "@/components/icons/Code.astro";
-import Experience from "@/components/Experience.astro";
-import ProfileCheck from "@/components/icons/ProfileCheck.astro";
-import Projects from "@/components/Projects.astro";
-import SectionContainer from "@/components/SectionContainer.astro";
-import Hero from "@/components/Hero.astro";
-import TitleSection from "@/components/TitleSection.astro";
+import AboutMe from "@components/AboutMe.astro";
+import Briefcase from "@components/icons/Briefcase.astro";
+import CodeIcon from "@components/icons/Code.astro";
+import Experience from "@components/Experience.astro";
+import ProfileCheck from "@components/icons/ProfileCheck.astro";
+import Projects from "@components/Projects.astro";
+import SectionContainer from "@components/SectionContainer.astro";
+import Hero from "@components/Hero.astro";
+import TitleSection from "@components/TitleSection.astro";
 ---
 
 <Layout
-  title="Porfolio de Óscar Gallego - Desarrollador y Programador Web con 3 años de experiencia"
-  description="Contrata a Óscar Gallego para crear tu aplicación web o móvil. Desarrollador Web. Especializado en crear aplicaciones únicas."
+  title="Óscar Gallego - Desarrollador Full Stack | Angular, NestJS & Next.js"
+  description="Ingeniero de software con +3 años de experiencia en frontend y backend. Especializado en Angular 19, NestJS, PostgreSQL y arquitecturas escalables. Actualmente en Rindus para Stibo DX."
+  image="/og-image.jpg"
+  type="profile"
 >
   <main class="px-4">
     <SectionContainer class="py-16 md:py-36">
@@ -30,13 +32,13 @@ import TitleSection from "@/components/TitleSection.astro";
       <Experience />
     </SectionContainer>
 
-    <!-- <SectionContainer id="proyectos">
+    <SectionContainer id="proyectos">
       <TitleSection>
         <CodeIcon class="size-7" />
         Proyectos
       </TitleSection>
       <Projects />
-    </SectionContainer> -->
+    </SectionContainer>
 
     <SectionContainer id="sobre-mi">
       <TitleSection>

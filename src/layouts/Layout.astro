@@ -1,29 +1,180 @@
 ---
-import "@fontsource-variable/onest";
+import '@fontsource-variable/onest'
 
-import Analytics from "@vercel/analytics/astro";
-import { ClientRouter } from "astro:transitions";
-import Footer from "../components/Footer.astro";
-import Header from "../components/Header.astro";
-import "../styles/global.css";
+import Analytics from '@vercel/analytics/astro'
+import { ClientRouter } from 'astro:transitions'
+import Footer from '../components/Footer.astro'
+import Header from '../components/Header.astro'
+import '../styles/global.css'
 
 interface Props {
-  title: string;
-  description: string;
+  title: string
+  description: string
+  image?: string
+  type?: 'website' | 'article' | 'profile'
+  canonicalURL?: string
 }
 
-const { description, title } = Astro.props;
+const {
+  description,
+  title,
+  image = '/og-image.jpg',
+  type = 'website',
+  canonicalURL = new URL(Astro.url.pathname, Astro.site).href,
+} = Astro.props
+
+// Site configuration
+const SITE_URL = 'https://porfolio.dev'
+const SITE_NAME = 'Óscar Gallego - Ingeniero de Software'
+const AUTHOR_NAME = 'Óscar Gallego'
+const TWITTER_HANDLE = '@garbarok'
+const THEME_COLOR = '#8b5cf6' // Matches the purple gradient in your design
+
+// Build full image URL for social sharing
+const socialImage = new URL(image, SITE_URL).href
 ---
 
 <!doctype html>
-<html lang="es">
+<html lang="es" class="dark">
   <head>
+    <!-- Basic Meta Tags -->
     <meta charset="UTF-8" />
-    <meta name="description" content={description} />
-    <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
+    <meta name="author" content={AUTHOR_NAME} />
+    <meta name="robots" content="index, follow" />
+    <meta name="googlebot" content="index, follow" />
+
+    <!-- Primary Meta Tags -->
     <title>{title}</title>
+    <meta name="title" content={title} />
+    <meta name="description" content={description} />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href={canonicalURL} />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content={type} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={socialImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content={`${AUTHOR_NAME} - Portfolio Preview`}
+    />
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:locale" content="es_ES" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonicalURL} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImage} />
+    <meta
+      name="twitter:image:alt"
+      content={`${AUTHOR_NAME} - Portfolio Preview`}
+    />
+    <meta name="twitter:creator" content={TWITTER_HANDLE} />
+    <meta name="twitter:site" content={TWITTER_HANDLE} />
+
+    <!-- Theme Color -->
+    <meta
+      name="theme-color"
+      content={THEME_COLOR}
+      media="(prefers-color-scheme: light)"
+    />
+    <meta
+      name="theme-color"
+      content="#1f2937"
+      media="(prefers-color-scheme: dark)"
+    />
+
+    <!-- Favicon and Icons -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+
+    <!-- Structured Data (JSON-LD) -->
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Person',
+        name: AUTHOR_NAME,
+        url: SITE_URL,
+        image: socialImage,
+        jobTitle: 'Ingeniero de Software',
+        description: description,
+        worksFor: {
+          '@type': 'Organization',
+          name: 'Rindus (Stibo DX)',
+        },
+        alumniOf: {
+          '@type': 'Organization',
+          name: 'Universidad de Málaga',
+        },
+        knowsAbout: [
+          'Angular',
+          'NestJS',
+          'PostgreSQL',
+          'Next.js',
+          'React',
+          'TypeScript',
+          'Node.js',
+          'Astro',
+          'Prisma ORM',
+          'API REST',
+          'Arquitectura de Software',
+          'Frontend Development',
+          'Backend Development',
+          'Fullstack Development',
+        ],
+        sameAs: [
+          'https://github.com/garbarok',
+          'https://linkedin.com/in/oscargallegoruiz',
+          'https://twitter.com/garbarok',
+        ],
+      })}
+    />
+
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        name: SITE_NAME,
+        url: SITE_URL,
+        description: description,
+        inLanguage: 'es-ES',
+        author: {
+          '@type': 'Person',
+          name: AUTHOR_NAME,
+        },
+      })}
+    />
+
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'ProfilePage',
+        dateCreated: '2024-01-01T00:00:00Z',
+        dateModified: new Date().toISOString(),
+        mainEntity: {
+          '@type': 'Person',
+          name: AUTHOR_NAME,
+          description: description,
+          jobTitle: 'Ingeniero de Software',
+          url: SITE_URL,
+        },
+      })}
+    />
+
     <ClientRouter />
   </head>
 
@@ -37,7 +188,7 @@ const { description, title } = Astro.props;
 
     <Footer />
     <script>
-      import "../scripts/botid";
+      import '../scripts/botid'
     </script>
     <style is:global>
       :root {
@@ -45,7 +196,7 @@ const { description, title } = Astro.props;
       }
 
       html {
-        font-family: "Onest Variable", system-ui, sans-serif;
+        font-family: 'Onest Variable', system-ui, sans-serif;
         scroll-behavior: smooth;
       }
 
