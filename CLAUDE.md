@@ -49,6 +49,7 @@ npm run astro
 ### Astro Integrations
 
 The project uses several Astro integrations (configured in `astro.config.mjs`):
+
 - `astro-robots-txt` - Robots.txt generation
 - `@astrojs/sitemap` - Sitemap generation (site URL: https://porfolio.dev/)
 - `@astrojs/partytown` - Third-party script optimization
@@ -58,6 +59,7 @@ The project uses several Astro integrations (configured in `astro.config.mjs`):
 ### Import Aliases
 
 TypeScript is configured with path aliases:
+
 ```typescript
 "@/*" → "src/*"
 ```
@@ -83,6 +85,7 @@ Example: `import Layout from '@/layouts/Layout.astro'`
 ### Content Management
 
 Experience and Projects data are defined as constants within their respective components:
+
 - `Experience.astro` contains `EXPERIENCE` array with job history
 - `Projects.astro` contains `PROJECTS` array and `TAGS` object for project showcases
 
@@ -93,35 +96,41 @@ When adding new experiences or projects, update these arrays directly in the com
 The project uses Vercel's BotID for bot protection:
 
 **Configuration Files:**
+
 - `vercel.json` - Contains rewrites and headers for BotID proxy endpoints
 - `src/scripts/botid.ts` - Client-side initialization script
 
 **How to Protect API Endpoints:**
 
 1. **Client-side**: Add routes to the `protect` array in `src/scripts/botid.ts`:
+
    ```typescript
    protect: [
      {
-       path: '/api/your-endpoint',
-       method: 'POST',
+       path: "/api/your-endpoint",
+       method: "POST",
      },
-   ]
+   ];
    ```
 
 2. **Server-side**: Use `checkBotId()` in your API routes (see `src/pages/api/example.ts`):
+
    ```typescript
-   import { checkBotId } from 'botid/server'
+   import { checkBotId } from "botid/server";
 
    export const POST: APIRoute = async ({ request }) => {
-     const verification = await checkBotId()
+     const verification = await checkBotId();
      if (verification.isBot) {
-       return new Response(JSON.stringify({ error: 'Access denied' }), { status: 403 })
+       return new Response(JSON.stringify({ error: "Access denied" }), {
+         status: 403,
+       });
      }
      // Your logic here
-   }
+   };
    ```
 
 **Important Notes:**
+
 - Both client-side protection (in botid.ts) AND server-side checks are required
 - In local development, `checkBotId()` always returns `isBot: false` by default
 - The BotID script is automatically initialized in `Layout.astro`
@@ -130,6 +139,7 @@ The project uses Vercel's BotID for bot protection:
 ## CI/CD
 
 GitHub Actions workflows are configured for:
+
 - Claude PR Assistant (`claude.yml`)
 - Claude Code Review (`claude-code-review.yml`)
 

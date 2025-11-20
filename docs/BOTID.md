@@ -15,15 +15,19 @@ BotID is Vercel's bot protection service that helps distinguish between legitima
 ## Files Overview
 
 ### `vercel.json`
+
 Contains rewrites and headers for BotID proxy endpoints. These routes handle the communication with Vercel's bot protection service.
 
 ### `src/scripts/botid.ts`
+
 Client-side initialization that:
+
 - Imports and initializes BotID
 - Defines which API endpoints to protect
 - Runs automatically on page load
 
 ### `src/pages/api/example.ts`
+
 Example API endpoint showing how to implement server-side bot checking.
 
 ## Adding Protection to a New API Endpoint
@@ -36,11 +40,11 @@ Edit `src/scripts/botid.ts` and add your endpoint:
 initBotId({
   protect: [
     {
-      path: '/api/your-new-endpoint',
-      method: 'POST', // or 'GET', 'PUT', etc.
+      path: "/api/your-new-endpoint",
+      method: "POST", // or 'GET', 'PUT', etc.
     },
   ],
-})
+});
 ```
 
 ### Step 2: Add Server-Side Check
@@ -48,36 +52,30 @@ initBotId({
 In your API route file (e.g., `src/pages/api/your-new-endpoint.ts`):
 
 ```typescript
-import type { APIRoute } from 'astro'
-import { checkBotId } from 'botid/server'
+import type { APIRoute } from "astro";
+import { checkBotId } from "botid/server";
 
 export const POST: APIRoute = async ({ request }) => {
   // Check if the request is from a bot
-  const verification = await checkBotId()
+  const verification = await checkBotId();
 
   if (verification.isBot) {
-    return new Response(
-      JSON.stringify({ error: 'Access denied' }),
-      {
-        status: 403,
-        headers: { 'Content-Type': 'application/json' }
-      }
-    )
+    return new Response(JSON.stringify({ error: "Access denied" }), {
+      status: 403,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 
   // Your business logic here
-  const body = await request.json()
+  const body = await request.json();
 
   // Process request...
 
-  return new Response(
-    JSON.stringify({ success: true }),
-    {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    }
-  )
-}
+  return new Response(JSON.stringify({ success: true }), {
+    status: 200,
+    headers: { "Content-Type": "application/json" },
+  });
+};
 ```
 
 ## Important Notes
@@ -91,9 +89,9 @@ In local development, `checkBotId()` always returns `isBot: false` by default. T
 ```typescript
 const verification = await checkBotId({
   developmentOptions: {
-    isBot: true // Force bot detection in development
-  }
-})
+    isBot: true, // Force bot detection in development
+  },
+});
 ```
 
 ### Testing
@@ -105,20 +103,21 @@ const verification = await checkBotId({
 3. Use the browser's Console to make a fetch request:
 
 ```javascript
-fetch('/api/example', {
-  method: 'POST',
+fetch("/api/example", {
+  method: "POST",
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
-  body: JSON.stringify({ test: 'data' })
+  body: JSON.stringify({ test: "data" }),
 })
-.then(res => res.json())
-.then(data => console.log(data))
+  .then((res) => res.json())
+  .then((data) => console.log(data));
 ```
 
 ### Production Behavior
 
 In production on Vercel:
+
 - BotID actively runs JavaScript challenges
 - Suspicious requests are blocked
 - Legitimate users pass through seamlessly

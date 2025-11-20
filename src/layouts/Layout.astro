@@ -1,18 +1,18 @@
 ---
-import '@fontsource-variable/onest'
+import "@fontsource-variable/onest";
 
-import Analytics from '@vercel/analytics/astro'
-import { ClientRouter } from 'astro:transitions'
-import Footer from '../components/Footer.astro'
-import Header from '../components/Header.astro'
-import '../styles/global.css'
+import Analytics from "@vercel/analytics/astro";
+import { ClientRouter } from "astro:transitions";
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+import "../styles/global.css";
 
 interface Props {
-  title: string
-  description: string
+  title: string;
+  description: string;
 }
 
-const { description, title } = Astro.props
+const { description, title } = Astro.props;
 ---
 
 <!doctype html>
@@ -29,9 +29,7 @@ const { description, title } = Astro.props
 
   <body class="relative text-black dark:text-white">
     <div
-      class="absolute top-0 bottom-0 z-[-2] min-h-screen w-full bg-gray-50 dark:bg-gray-950
-      bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(217,216,255,0.5),rgba(255,255,255,0.9))]
-      dark:bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]"
+      class="absolute top-0 bottom-0 z-[-2] min-h-screen w-full bg-gray-50 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(217,216,255,0.5),rgba(255,255,255,0.9))] dark:bg-gray-950 dark:bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]"
     >
     </div>
     <Header />
@@ -39,7 +37,7 @@ const { description, title } = Astro.props
 
     <Footer />
     <script>
-      import '../scripts/botid'
+      import "../scripts/botid";
     </script>
     <style is:global>
       :root {
@@ -47,7 +45,7 @@ const { description, title } = Astro.props
       }
 
       html {
-        font-family: 'Onest Variable', system-ui, sans-serif;
+        font-family: "Onest Variable", system-ui, sans-serif;
         scroll-behavior: smooth;
       }
 
