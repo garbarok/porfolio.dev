@@ -34,8 +34,8 @@ const shouldLoadGA = isProduction && GA_MEASUREMENT_ID
       <!-- Configure Google Analytics with Partytown -->
       <script is:inline type="text/partytown" set:html={`
         window.dataLayer = window.dataLayer || [];
-        function gtag() {
-          dataLayer.push(arguments);
+        window.gtag = function gtag() {
+          window.dataLayer.push(arguments);
         }
         gtag("js", new Date());
         gtag("config", "${GA_MEASUREMENT_ID}", {

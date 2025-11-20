@@ -43,7 +43,7 @@ export default defineConfig({
     }),
     partytown({
       config: {
-        forward: ["dataLayer.push"],
+        forward: ["dataLayer.push", "gtag"],
         // Debug mode is automatically enabled in dev/preview modes
         // Set to true in production only for troubleshooting
         debug: false,
