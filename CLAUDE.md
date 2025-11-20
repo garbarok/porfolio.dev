@@ -88,6 +88,45 @@ Experience and Projects data are defined as constants within their respective co
 
 When adding new experiences or projects, update these arrays directly in the component files.
 
+### Bot Protection (BotID)
+
+The project uses Vercel's BotID for bot protection:
+
+**Configuration Files:**
+- `vercel.json` - Contains rewrites and headers for BotID proxy endpoints
+- `src/scripts/botid.ts` - Client-side initialization script
+
+**How to Protect API Endpoints:**
+
+1. **Client-side**: Add routes to the `protect` array in `src/scripts/botid.ts`:
+   ```typescript
+   protect: [
+     {
+       path: '/api/your-endpoint',
+       method: 'POST',
+     },
+   ]
+   ```
+
+2. **Server-side**: Use `checkBotId()` in your API routes (see `src/pages/api/example.ts`):
+   ```typescript
+   import { checkBotId } from 'botid/server'
+
+   export const POST: APIRoute = async ({ request }) => {
+     const verification = await checkBotId()
+     if (verification.isBot) {
+       return new Response(JSON.stringify({ error: 'Access denied' }), { status: 403 })
+     }
+     // Your logic here
+   }
+   ```
+
+**Important Notes:**
+- Both client-side protection (in botid.ts) AND server-side checks are required
+- In local development, `checkBotId()` always returns `isBot: false` by default
+- The BotID script is automatically initialized in `Layout.astro`
+- Test protected endpoints by making fetch requests from the application, not with curl
+
 ## CI/CD
 
 GitHub Actions workflows are configured for:
