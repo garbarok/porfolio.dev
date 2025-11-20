@@ -11,8 +11,6 @@ import vercel from "@astrojs/vercel";
 
 // https://astro.build/config
 export default defineConfig({
-  output: "static",
-
   i18n: {
     defaultLocale: "es",
     locales: ["es", "en"],
@@ -91,6 +89,4 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
   },
-
-  adapter: vercel(),
 });
