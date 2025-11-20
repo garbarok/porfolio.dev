@@ -1,0 +1,90 @@
+---
+import type { CollectionEntry } from 'astro:content'
+import { getCollection } from 'astro:content'
+import { formatDate, sortByDate } from '@/utils/blog'
+
+interface Props {
+  currentPost: CollectionEntry<'blog'>
+  limit?: number
+}
+
+const { currentPost, limit = 3 } = Astro.props
+
+// Get all published posts
+const allPosts = await getCollection('blog')
+const publishedPosts = allPosts.filter(
+  (post) => !post.data.draft && post.id !== currentPost.id
+)
+
+// Find related posts based on matching tags
+const relatedPosts = publishedPosts
+  .map((post) => {
+    const matchingTags = post.data.tags.filter((tag) =>
+      currentPost.data.tags.includes(tag)
+    )
+    return {
+      post,
+      score: matchingTags.length,
+    }
+  })
+  .filter((item) => item.score > 0)
+  .sort((a, b) => b.score - a.score || b.post.data.pubDate.valueOf() - a.post.data.pubDate.valueOf())
+  .slice(0, limit)
+  .map((item) => item.post)
+
+// If not enough related posts, fill with recent posts using sortByDate utility
+const recentPosts = sortByDate(publishedPosts)
+  .filter((post) => !relatedPosts.includes(post))
+  .slice(0, limit - relatedPosts.length)
+
+const postsToShow = [...relatedPosts, ...recentPosts]
+---
+
+{
+  postsToShow.length > 0 && (
+    <>
+      <h2 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+        Artículos relacionados
+      </h2>
+      <div class="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        {postsToShow.map((post) => (
+          <article class="group relative flex flex-col">
+            {post.data.image && (
+              <div class="relative w-full overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
+                <img
+                  src={post.data.image.url}
+                  alt={post.data.image.alt}
+                  class="aspect-video w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  loading="lazy"
+                />
+              </div>
+            )}
+            <div class="mt-4 flex-1">
+              <time
+                datetime={post.data.pubDate.toISOString()}
+                class="text-xs text-gray-500 dark:text-gray-400"
+              >
+                {formatDate(post.data.pubDate)}
+              </time>
+              <h3 class="mt-2 text-base font-semibold leading-tight text-gray-900 transition-colors group-hover:text-blue-600 dark:text-white dark:group-hover:text-blue-400">
+                <a href={`/blog/${post.id}`}>
+                  <span class="absolute inset-0" />
+                  {post.data.title}
+                </a>
+              </h3>
+              {post.data.tags.length > 0 && (
+                <div class="mt-2 flex flex-wrap gap-1">
+                  {post.data.tags.slice(0, 2).map((tag) => (
+                    <span class="inline-flex items-center rounded-full bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-700 dark:bg-blue-400/10 dark:text-blue-400">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+          </article>
+        ))}
+      </div>
+    </>
+  )
+}

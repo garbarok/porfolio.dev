@@ -1,0 +1,254 @@
+---
+interface Props {
+  Content: any;
+}
+
+const { Content } = Astro.props;
+---
+
+<div class="min-w-0">
+  <article class="blog-content">
+    <Content />
+  </article>
+</div>
+
+<style is:global>
+  @reference "tailwindcss/theme";
+
+  /* Blog Content Typography Styles */
+  .blog-content {
+    @apply text-gray-700 dark:text-gray-300;
+    font-size: 1.125rem;
+    line-height: 1.8;
+  }
+
+  /* Headings */
+  .blog-content h1 {
+    @apply text-5xl font-extrabold text-gray-900 dark:text-white;
+    margin-top: 4rem;
+    margin-bottom: 2rem;
+    line-height: 1.1;
+    scroll-margin-top: 6rem;
+  }
+
+  .blog-content h2 {
+    @apply text-4xl font-bold text-gray-900 dark:text-white;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid rgb(229 231 235);
+    line-height: 1.2;
+    scroll-margin-top: 6rem;
+  }
+
+  :global(.dark) .blog-content h2 {
+    border-bottom-color: rgb(55 65 81);
+  }
+
+  .blog-content h3 {
+    @apply text-3xl font-bold text-gray-900 dark:text-white;
+    margin-top: 3rem;
+    margin-bottom: 1.25rem;
+    line-height: 1.3;
+    scroll-margin-top: 6rem;
+  }
+
+  .blog-content h4 {
+    @apply text-2xl font-semibold text-gray-900 dark:text-white;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    line-height: 1.4;
+  }
+
+  .blog-content h5 {
+    @apply text-xl font-semibold text-gray-800 dark:text-gray-100;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .blog-content h6 {
+    @apply text-lg font-semibold text-gray-700 dark:text-gray-300;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Paragraphs */
+  .blog-content p {
+    margin-bottom: 1.75rem;
+    line-height: 1.8;
+  }
+
+  .blog-content p:first-of-type {
+    @apply text-xl font-medium text-gray-800 dark:text-gray-200;
+    line-height: 1.7;
+  }
+
+  /* Links */
+  .blog-content a {
+    @apply font-semibold text-blue-600 dark:text-blue-400;
+    text-decoration: none;
+    text-underline-offset: 0.2em;
+    text-decoration-thickness: 2px;
+    text-decoration-color: rgb(96 165 250 / 0.4);
+    transition: all 0.3s ease;
+  }
+
+  .blog-content a:hover {
+    @apply text-blue-700 dark:text-blue-300;
+    text-decoration: underline;
+    text-decoration-color: rgb(59 130 246);
+  }
+
+  /* Strong and Emphasis */
+  .blog-content strong {
+    @apply font-bold text-gray-900 dark:text-white;
+  }
+
+  .blog-content em {
+    @apply italic text-gray-800 dark:text-gray-200;
+  }
+
+  /* Inline Code */
+  .blog-content code:not(pre code) {
+    @apply rounded-md bg-gradient-to-br from-blue-50 to-blue-100/50 dark:from-blue-900/40 dark:to-blue-800/30;
+    @apply px-2.5 py-1 font-mono text-sm font-semibold;
+    @apply text-blue-900 dark:text-blue-200;
+    @apply border border-blue-200 dark:border-blue-800/50;
+    @apply shadow-sm;
+  }
+
+  .blog-content code:not(pre code)::before,
+  .blog-content code:not(pre code)::after {
+    content: "";
+  }
+
+  /* Code Blocks */
+  .blog-content pre {
+    @apply rounded-2xl my-12 backdrop-blur;
+    @apply bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900;
+    @apply dark:from-gray-950 dark:via-gray-900 dark:to-gray-950;
+    @apply shadow-[0_20px_50px_rgba(0,0,0,0.5)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.8)];
+    @apply ring-2 ring-gray-700/40 dark:ring-gray-700/40;
+    @apply ring-offset-4 ring-offset-white dark:ring-offset-gray-900;
+    @apply border border-gray-800 dark:border-gray-700;
+    padding: 1.5rem;
+    overflow-x: auto;
+  }
+
+  .blog-content pre code {
+    @apply bg-transparent border-0 p-0 text-sm;
+    box-shadow: none;
+  }
+
+  /* Lists */
+  .blog-content ul,
+  .blog-content ol {
+    margin: 2rem 0;
+    padding-left: 1.5rem;
+  }
+
+  .blog-content ul {
+    list-style-type: disc;
+  }
+
+  .blog-content ol {
+    list-style-type: decimal;
+  }
+
+  .blog-content li {
+    margin: 0.75rem 0;
+    padding-left: 0.5rem;
+    line-height: 1.75;
+    font-size: 1.125rem;
+  }
+
+  .blog-content li::marker {
+    @apply text-blue-600 dark:text-blue-400 font-bold;
+  }
+
+  .blog-content ol li::marker {
+    @apply font-mono;
+  }
+
+  .blog-content li > ul,
+  .blog-content li > ol {
+    margin-top: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  /* Blockquotes */
+  .blog-content blockquote {
+    @apply relative pl-8 pr-8 py-6 my-12;
+    @apply border-l-[6px] border-blue-500 dark:border-blue-400;
+    @apply bg-gradient-to-r from-blue-50 via-blue-50/70 to-transparent;
+    @apply dark:from-blue-900/20 dark:via-blue-900/10 dark:to-transparent;
+    @apply shadow-xl dark:shadow-blue-900/20;
+    @apply rounded-r-2xl;
+    @apply text-xl text-gray-700 dark:text-gray-300 font-medium;
+    line-height: 1.7;
+  }
+
+  /* Images */
+  .blog-content img {
+    @apply rounded-2xl my-12;
+    @apply shadow-[0_20px_60px_rgba(0,0,0,0.3)];
+    @apply ring-2 ring-gray-900/10 dark:ring-white/10;
+    @apply transition-transform duration-300;
+  }
+
+  .blog-content img:hover {
+    transform: scale(1.02);
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35);
+  }
+
+  /* Figures and Captions */
+  .blog-content figure {
+    margin: 3rem 0;
+  }
+
+  .blog-content figcaption {
+    @apply text-center text-sm text-gray-600 dark:text-gray-400 italic;
+    margin-top: 1rem;
+  }
+
+  /* Tables */
+  .blog-content table {
+    @apply w-full my-12 border-collapse shadow-xl rounded-xl overflow-hidden;
+  }
+
+  .blog-content thead {
+    @apply bg-gradient-to-r from-gray-100 to-gray-50 dark:from-gray-800 dark:to-gray-800/80;
+  }
+
+  .blog-content th {
+    @apply font-bold p-5 text-left text-gray-900 dark:text-white;
+    @apply border-b-2 border-gray-300 dark:border-gray-700;
+  }
+
+  .blog-content td {
+    @apply p-5 border-t border-gray-200 dark:border-gray-700;
+    @apply bg-white dark:bg-gray-900/50;
+  }
+
+  .blog-content tr {
+    @apply transition-colors;
+  }
+
+  .blog-content tr:hover {
+    @apply bg-gray-50 dark:bg-gray-800/50;
+  }
+
+  /* Horizontal Rules */
+  .blog-content hr {
+    margin: 4rem 0;
+    border: 0;
+    height: 1px;
+    @apply bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-700 to-transparent;
+  }
+
+  /* Videos */
+  .blog-content video,
+  .blog-content iframe {
+    @apply rounded-2xl shadow-2xl my-12;
+    @apply ring-2 ring-gray-900/10 dark:ring-white/10;
+  }
+</style>

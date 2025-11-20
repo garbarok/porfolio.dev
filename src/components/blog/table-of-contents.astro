@@ -1,0 +1,122 @@
+---
+export interface Heading {
+  depth: number
+  slug: string
+  text: string
+}
+
+interface Props {
+  headings: Heading[]
+}
+
+const { headings } = Astro.props
+
+// Filter to only show H2 and H3 headings
+const tocHeadings = headings.filter((h) => h.depth <= 3)
+---
+
+{
+  tocHeadings.length > 0 && (
+    <nav class="toc-nav" aria-label="Tabla de contenidos">
+      <h2 class="text-sm font-semibold uppercase tracking-wide text-gray-900 dark:text-white">
+        En este artículo
+      </h2>
+      <ul class="mt-4 space-y-2 border-l-2 border-gray-200 dark:border-gray-800">
+        {tocHeadings.map((heading) => (
+          <li
+            class:list={[
+              'toc-item',
+              {
+                'pl-4': heading.depth === 2,
+                'pl-8': heading.depth === 3,
+              },
+            ]}
+          >
+            <a
+              href={`#${heading.slug}`}
+              class="toc-link block text-sm text-gray-600 transition-colors hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400"
+              data-toc-link={heading.slug}
+            >
+              {heading.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )
+}
+
+<script>
+  // Highlight active section in TOC
+  function highlightActiveHeading() {
+    const tocLinks = document.querySelectorAll('[data-toc-link]')
+    if (tocLinks.length === 0) return
+
+    const headings = Array.from(tocLinks)
+      .map((link) => {
+        const id = link.getAttribute('data-toc-link')
+        return document.getElementById(id!)
+      })
+      .filter((heading): heading is HTMLElement => heading !== null)
+
+    function updateActiveLink() {
+      let activeHeading: HTMLElement | null = null
+
+      // Find the heading that's currently in view
+      for (const heading of headings) {
+        const rect = heading.getBoundingClientRect()
+        if (rect.top <= 100) {
+          activeHeading = heading
+        } else {
+          break
+        }
+      }
+
+      // Update active states
+      tocLinks.forEach((link) => {
+        const id = link.getAttribute('data-toc-link')
+        if (id === activeHeading?.id) {
+          link.classList.add('active')
+          link.classList.remove('text-gray-600', 'dark:text-gray-400')
+          link.classList.add('text-blue-600', 'font-medium', 'dark:text-blue-400')
+        } else {
+          link.classList.remove('active', 'font-medium')
+          link.classList.remove('text-blue-600', 'dark:text-blue-400')
+          link.classList.add('text-gray-600', 'dark:text-gray-400')
+        }
+      })
+    }
+
+    // Run on scroll and initial load
+    window.addEventListener('scroll', updateActiveLink, { passive: true })
+    updateActiveLink()
+  }
+
+  // Initialize on page load
+  document.addEventListener('DOMContentLoaded', highlightActiveHeading)
+
+  // Reinitialize after view transitions
+  document.addEventListener('astro:page-load', highlightActiveHeading)
+</script>
+
+<style>
+  .toc-nav {
+    position: sticky;
+    top: 2rem;
+    max-height: calc(100vh - 4rem);
+    overflow-y: auto;
+  }
+
+  .toc-nav::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .toc-nav::-webkit-scrollbar-thumb {
+    background-color: rgb(209 213 219);
+    border-radius: 2px;
+  }
+
+  :global(.dark) .toc-nav::-webkit-scrollbar-thumb {
+    background-color: rgb(55 65 81);
+  }
+</style>

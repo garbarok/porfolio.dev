@@ -1,0 +1,100 @@
+---
+import { getCollection } from 'astro:content'
+import Layout from '@layouts/Layout.astro'
+import FeaturedPostSection from '@components/blog/featured-post-section.astro'
+import BlogGrid from '@components/blog/blog-grid.astro'
+
+// Get all blog posts and sort by date (newest first)
+const allPosts = await getCollection('blog')
+const sortedPosts = allPosts
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+
+// Featured post (most recent) and remaining posts
+const featuredPost = sortedPosts[0]
+const recentPosts = sortedPosts.slice(1, 4) // Next 3 posts for sidebar
+const remainingPosts = sortedPosts.slice(4) // All other posts for grid
+---
+
+<Layout
+  title="Blog - Óscar Gallego"
+  description="Artículos sobre desarrollo web, JavaScript, TypeScript, Astro y las últimas tendencias en tecnología."
+>
+  <!-- Hero Section -->
+  <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-2xl text-center">
+      <h1
+        class="bg-gradient-to-r from-sky-500 to-blue-600 bg-clip-text text-4xl font-semibold tracking-tight text-transparent sm:text-5xl"
+      >
+        Blog
+      </h1>
+      <p class="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
+        Comparto mi experiencia y conocimientos sobre desarrollo web, mejores
+        prácticas y las últimas tecnologías.
+      </p>
+    </div>
+  </section>
+
+  <!-- Featured Post & Recent Posts -->
+  {
+    featuredPost && recentPosts.length > 0 && (
+      <FeaturedPostSection
+        featuredPost={featuredPost}
+        recentPosts={recentPosts}
+      />
+    )
+  }
+
+  <!-- All Other Posts Grid -->
+  {
+    remainingPosts.length > 0 && (
+      <BlogGrid
+        posts={remainingPosts}
+        title="Más artículos"
+        description="Explora más contenido sobre desarrollo web y tecnología."
+      />
+    )
+  }
+
+  <!-- Empty State -->
+  {
+    sortedPosts.length === 0 && (
+      <section class="mx-auto max-w-7xl px-4 pb-24 sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-2xl text-center">
+          <p class="text-gray-600 dark:text-gray-400">
+            No hay artículos publicados todavía. ¡Vuelve pronto!
+          </p>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- CTA Section -->
+  <section class="mx-auto max-w-7xl px-4 pb-24 sm:px-6 lg:px-8">
+    <div
+      class="rounded-3xl bg-gradient-to-r from-sky-500 to-blue-600 px-6 py-16 text-center shadow-2xl sm:px-12"
+    >
+      <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+        ¿Quieres estar al día?
+      </h2>
+      <p class="mx-auto mt-6 max-w-xl text-lg leading-8 text-blue-100">
+        Sígueme en mis redes sociales para no perderte ningún artículo y estar
+        al tanto de las últimas novedades en desarrollo web.
+      </p>
+      <div class="mt-10 flex items-center justify-center gap-x-6">
+        <a
+          href="https://github.com/garbarok"
+          class="rounded-full bg-white px-6 py-3 text-sm font-semibold text-blue-600 shadow-sm transition-transform hover:scale-105 hover:bg-blue-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+        >
+          Ver GitHub
+        </a>
+        <a
+          href="https://www.linkedin.com/in/oscargallegoruiz/"
+          class="text-sm leading-6 font-semibold text-white transition-colors hover:text-blue-100"
+        >
+          Conectar en LinkedIn <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>

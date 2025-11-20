@@ -1,0 +1,63 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { formatDate } from "@/utils/blog";
+
+interface Props {
+  post: CollectionEntry<"blog">;
+  readingTime: number;
+}
+
+const { post, readingTime } = Astro.props;
+---
+
+<header class="mx-auto max-w-3xl">
+  <div
+    class="flex flex-wrap items-center gap-2 text-sm text-gray-600 dark:text-gray-400"
+  >
+    <time datetime={post.data.pubDate.toISOString()}>
+      {formatDate(post.data.pubDate)}
+    </time>
+    <span class="text-gray-300 dark:text-gray-600">·</span>
+    <span>{readingTime} min de lectura</span>
+    {
+      post.data.tags.length > 0 && (
+        <>
+          <span class="text-gray-300 dark:text-gray-600">·</span>
+          <div class="flex flex-wrap gap-2">
+            {post.data.tags.map((tag) => (
+              <span class="inline-flex items-center rounded-full bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10 dark:bg-blue-400/10 dark:text-blue-400 dark:ring-blue-400/30">
+                {tag}
+              </span>
+            ))}
+          </div>
+        </>
+      )
+    }
+  </div>
+
+  <h1
+    class="mt-6 bg-gradient-to-r from-sky-500 to-blue-600 bg-clip-text text-4xl font-bold tracking-tight text-transparent sm:text-5xl lg:text-6xl"
+  >
+    {post.data.title}
+  </h1>
+
+  <p class="mt-6 text-xl leading-8 text-gray-600 dark:text-gray-300">
+    {post.data.description}
+  </p>
+
+  <div
+    class="mt-8 flex items-center gap-x-4 border-t border-gray-100 pt-6 dark:border-gray-800"
+  >
+    <div
+      class="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-sky-400 to-blue-600 text-lg font-semibold text-white"
+    >
+      {post.data.author.split(" ").map((n) => n[0]).join("")}
+    </div>
+    <div>
+      <p class="font-semibold text-gray-900 dark:text-white">
+        {post.data.author}
+      </p>
+      <p class="text-sm text-gray-600 dark:text-gray-400">Desarrollador Web</p>
+    </div>
+  </div>
+</header>

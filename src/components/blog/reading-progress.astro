@@ -1,0 +1,51 @@
+---
+// Reading Progress Bar Component
+// Shows progress as user scrolls through the article
+---
+
+<div
+  id="reading-progress"
+  class="fixed top-0 left-0 z-50 h-1 bg-gradient-to-r from-sky-500 to-blue-600 transition-all duration-150"
+  style="width: 0%"
+  aria-label="Progreso de lectura"
+  role="progressbar"
+  aria-valuemin="0"
+  aria-valuemax="100"
+  aria-valuenow="0"
+>
+</div>
+
+<script>
+  function initReadingProgress() {
+    const progressBar = document.getElementById('reading-progress')
+    if (!progressBar) return
+
+    function updateProgress() {
+      if (!progressBar) return
+
+      const windowHeight = window.innerHeight
+      const documentHeight = document.documentElement.scrollHeight
+      const scrollTop = window.scrollY
+
+      const scrollableHeight = documentHeight - windowHeight
+      const progress = (scrollTop / scrollableHeight) * 100
+
+      const clampedProgress = Math.min(Math.max(progress, 0), 100)
+
+      progressBar.style.width = `${clampedProgress}%`
+      progressBar.setAttribute('aria-valuenow', clampedProgress.toString())
+    }
+
+    // Update on scroll
+    window.addEventListener('scroll', updateProgress, { passive: true })
+
+    // Initial update
+    updateProgress()
+  }
+
+  // Initialize on page load
+  document.addEventListener('DOMContentLoaded', initReadingProgress)
+
+  // Reinitialize after view transitions
+  document.addEventListener('astro:page-load', initReadingProgress)
+</script>
