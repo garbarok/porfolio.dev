@@ -1,5 +1,8 @@
 ---
 import MailIcon from '@components/icons/Mail.astro'
+import LinkedInIcon from '@components/icons/LinkedIn.astro'
+import GitHubIcon from '@components/icons/GitHub.astro'
+import { getLangFromUrl, useTranslations } from '@/i18n/utils'
 
 interface Props {
   useApi?: boolean
@@ -12,14 +15,16 @@ const formAction = useApi ? '/api/contact' : `https://formspree.io/f/${formspree
 const contactEmail = import.meta.env.PUBLIC_CONTACT_EMAIL || 'work@oscargallegoruiz.com'
 const linkedinUrl = import.meta.env.PUBLIC_LINKEDIN_URL || 'https://linkedin.com/in/oscargallegoruiz'
 const githubUrl = import.meta.env.PUBLIC_GITHUB_URL || 'https://github.com/garbarok'
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
 ---
 
 <div class="mx-auto max-w-3xl">
   <!-- Contact Info -->
   <div class="mb-12 text-center">
     <p class="text-lg text-gray-600 dark:text-gray-400">
-      ¿Tienes un proyecto en mente? ¿Quieres colaborar? Envíame un mensaje y
-      hablemos.
+      {t('contact.description')}
     </p>
     <div class="mt-6 flex flex-wrap items-center justify-center gap-4">
       <a
@@ -34,8 +39,9 @@ const githubUrl = import.meta.env.PUBLIC_GITHUB_URL || 'https://github.com/garba
         href={linkedinUrl}
         target="_blank"
         rel="noopener noreferrer"
-        class="text-base font-medium text-gray-600 transition hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+        class="group inline-flex items-center gap-2 text-base font-medium text-gray-600 transition hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
       >
+        <LinkedInIcon class="size-5" />
         LinkedIn
       </a>
       <span class="text-gray-400 dark:text-gray-600">•</span>
@@ -43,8 +49,9 @@ const githubUrl = import.meta.env.PUBLIC_GITHUB_URL || 'https://github.com/garba
         href={githubUrl}
         target="_blank"
         rel="noopener noreferrer"
-        class="text-base font-medium text-gray-600 transition hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+        class="group inline-flex items-center gap-2 text-base font-medium text-gray-600 transition hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
       >
+        <GitHubIcon class="size-5" />
         GitHub
       </a>
     </div>
@@ -76,7 +83,7 @@ const githubUrl = import.meta.env.PUBLIC_GITHUB_URL || 'https://github.com/garba
             d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
         </svg>
         <p class="text-sm font-medium text-green-800 dark:text-green-200">
-          ¡Mensaje enviado con éxito! Te responderé pronto.
+          {t('contact.success')}
         </p>
       </div>
     </div>
@@ -112,14 +119,14 @@ const githubUrl = import.meta.env.PUBLIC_GITHUB_URL || 'https://github.com/garba
         for="name"
         class="mb-2 block text-sm font-semibold text-gray-900 dark:text-white"
       >
-        Nombre completo <span class="text-red-500">*</span>
+        {t('contact.form.name')} <span class="text-red-500">*</span>
       </label>
       <input
         type="text"
         id="name"
         name="name"
         required
-        placeholder="Tu nombre"
+        placeholder={t('contact.form.namePlaceholder')}
         class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500 dark:focus:border-blue-400 dark:focus:ring-blue-400/20"
       />
       <p
@@ -135,14 +142,14 @@ const githubUrl = import.meta.env.PUBLIC_GITHUB_URL || 'https://github.com/garba
         for="email"
         class="mb-2 block text-sm font-semibold text-gray-900 dark:text-white"
       >
-        Email <span class="text-red-500">*</span>
+        {t('contact.form.email')} <span class="text-red-500">*</span>
       </label>
       <input
         type="email"
         id="email"
         name="email"
         required
-        placeholder="tu@email.com"
+        placeholder={t('contact.form.emailPlaceholder')}
         class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500 dark:focus:border-blue-400 dark:focus:ring-blue-400/20"
       />
       <p
@@ -158,13 +165,13 @@ const githubUrl = import.meta.env.PUBLIC_GITHUB_URL || 'https://github.com/garba
         for="subject"
         class="mb-2 block text-sm font-semibold text-gray-900 dark:text-white"
       >
-        Asunto
+        {t('contact.form.subject')}
       </label>
       <input
         type="text"
         id="subject"
         name="subject"
-        placeholder="¿De qué quieres hablar?"
+        placeholder={t('contact.form.subjectPlaceholder')}
         class="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500 dark:focus:border-blue-400 dark:focus:ring-blue-400/20"
       />
       <p
@@ -180,14 +187,14 @@ const githubUrl = import.meta.env.PUBLIC_GITHUB_URL || 'https://github.com/garba
         for="message"
         class="mb-2 block text-sm font-semibold text-gray-900 dark:text-white"
       >
-        Mensaje <span class="text-red-500">*</span>
+        {t('contact.form.message')} <span class="text-red-500">*</span>
       </label>
       <textarea
         id="message"
         name="message"
         required
         rows="6"
-        placeholder="Cuéntame sobre tu proyecto o idea..."
+        placeholder={t('contact.form.messagePlaceholder')}
         class="w-full resize-none rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500 dark:focus:border-blue-400 dark:focus:ring-blue-400/20"
       ></textarea>
       <p
@@ -200,7 +207,7 @@ const githubUrl = import.meta.env.PUBLIC_GITHUB_URL || 'https://github.com/garba
     <!-- Submit Button -->
     <div class="flex items-center justify-between">
       <p class="text-sm text-gray-600 dark:text-gray-400">
-        <span class="text-red-500">*</span> Campos requeridos
+        <span class="text-red-500">*</span> {t('contact.form.required')}
       </p>
       <button
         type="submit"
@@ -208,7 +215,7 @@ const githubUrl = import.meta.env.PUBLIC_GITHUB_URL || 'https://github.com/garba
         class="inline-flex items-center justify-center gap-2 rounded-full bg-black px-8 py-3 text-base font-medium text-white transition hover:bg-gray-800 focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-white dark:text-black dark:hover:bg-gray-200 dark:focus:ring-white dark:focus:ring-offset-gray-900"
       >
         <MailIcon class="size-4" />
-        <span id="button-text">Enviar mensaje</span>
+        <span id="button-text">{t('contact.form.submit')}</span>
         <svg
           id="button-spinner"
           class="hidden h-5 w-5 animate-spin"
@@ -233,7 +240,13 @@ const githubUrl = import.meta.env.PUBLIC_GITHUB_URL || 'https://github.com/garba
     </div>
   </form>
 
-  <script define:vars={{ useApi }} is:inline>
+  <script define:vars={{
+    useApi,
+    sendingText: t('contact.form.sending'),
+    submitText: t('contact.form.submit'),
+    defaultErrorText: t('contact.error'),
+    connectionErrorText: t('contact.connectionError')
+  }} is:inline>
     document.addEventListener('astro:page-load', () => {
       const form = document.getElementById('contact-form')
 
@@ -247,7 +260,7 @@ const githubUrl = import.meta.env.PUBLIC_GITHUB_URL || 'https://github.com/garba
       const buttonSpinner = document.getElementById('button-spinner')
       const successMessage = document.getElementById('success-message')
       const errorMessage = document.getElementById('error-message')
-      const errorText = document.getElementById('error-text')
+      const errorTextEl = document.getElementById('error-text')
 
       // Clear all error messages
       const clearErrors = () => {
@@ -283,7 +296,7 @@ const githubUrl = import.meta.env.PUBLIC_GITHUB_URL || 'https://github.com/garba
 
           // Disable button and show loading state
           submitButton.disabled = true
-          if (buttonText) buttonText.textContent = 'Enviando...'
+          if (buttonText) buttonText.textContent = sendingText
           if (buttonSpinner) buttonSpinner.classList.remove('hidden')
 
           try {
@@ -313,21 +326,19 @@ const githubUrl = import.meta.env.PUBLIC_GITHUB_URL || 'https://github.com/garba
               })
             } else {
               // Show general error
-              if (errorText)
-                errorText.textContent =
-                  data.message || 'Ocurrió un error al enviar el mensaje.'
+              if (errorTextEl)
+                errorTextEl.textContent = data.message || defaultErrorText
               if (errorMessage) errorMessage.classList.remove('hidden')
             }
           } catch (error) {
             console.error('Form submission error:', error)
-            if (errorText)
-              errorText.textContent =
-                'Error de conexión. Por favor intenta de nuevo.'
+            if (errorTextEl)
+              errorTextEl.textContent = connectionErrorText
             if (errorMessage) errorMessage.classList.remove('hidden')
           } finally {
             // Re-enable button and restore state
             submitButton.disabled = false
-            if (buttonText) buttonText.textContent = 'Enviar mensaje'
+            if (buttonText) buttonText.textContent = submitText
             if (buttonSpinner) buttonSpinner.classList.add('hidden')
           }
         })
@@ -338,7 +349,7 @@ const githubUrl = import.meta.env.PUBLIC_GITHUB_URL || 'https://github.com/garba
   <!-- Additional Info -->
   <div class="mt-8 mb-8 text-center">
     <p class="text-sm text-gray-600 dark:text-gray-400">
-      También puedes escribirme directamente a{' '}
+      {t('contact.directEmail')}{' '}
       <a
         href={`mailto:${contactEmail}`}
         class="font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"

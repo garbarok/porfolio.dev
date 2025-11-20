@@ -6,14 +6,16 @@ import { formatDate, sortByDate } from '@/utils/blog'
 interface Props {
   currentPost: CollectionEntry<'blog'>
   limit?: number
+  relatedPostsTitle: string
+  lang: 'en' | 'es'
 }
 
-const { currentPost, limit = 3 } = Astro.props
+const { currentPost, limit = 3, relatedPostsTitle, lang } = Astro.props
 
-// Get all published posts
+// Get all published posts in the same language
 const allPosts = await getCollection('blog')
 const publishedPosts = allPosts.filter(
-  (post) => !post.data.draft && post.id !== currentPost.id
+  (post) => !post.data.draft && post.id !== currentPost.id && post.id.startsWith(`${lang}/`)
 )
 
 // Find related posts based on matching tags
@@ -44,7 +46,7 @@ const postsToShow = [...relatedPosts, ...recentPosts]
   postsToShow.length > 0 && (
     <>
       <h2 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-        Artículos relacionados
+        {relatedPostsTitle}
       </h2>
       <div class="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
         {postsToShow.map((post) => (
@@ -64,10 +66,10 @@ const postsToShow = [...relatedPosts, ...recentPosts]
                 datetime={post.data.pubDate.toISOString()}
                 class="text-xs text-gray-500 dark:text-gray-400"
               >
-                {formatDate(post.data.pubDate)}
+                {formatDate(post.data.pubDate, lang)}
               </time>
               <h3 class="mt-2 text-base font-semibold leading-tight text-gray-900 transition-colors group-hover:text-blue-600 dark:text-white dark:group-hover:text-blue-400">
-                <a href={`/blog/${post.id}`}>
+                <a href={lang === 'es' ? `/blog/${post.id.replace('es/', '')}` : `/${lang}/blog/${post.id.replace(`${lang}/`, '')}`}>
                   <span class="absolute inset-0" />
                   {post.data.title}
                 </a>

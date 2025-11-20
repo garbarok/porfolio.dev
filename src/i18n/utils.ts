@@ -39,3 +39,49 @@ export function getLocalizedPath(path: string, lang: Language): string {
   }
   return `/${lang}${path}`
 }
+
+export async function getTranslatedBlogPath(currentSlug: string, currentLang: Language, targetLang: Language): Promise<string | null> {
+  try {
+    const { getCollection } = await import('astro:content');
+    const posts = await getCollection('blog');
+
+    // Find the current post
+    const currentPost = posts.find(post => {
+      const slug = post.id.replace(/^(en|es)\//, '');
+      return slug === currentSlug && post.id.startsWith(`${currentLang}/`);
+    });
+
+    if (!currentPost) {
+      return null;
+    }
+
+    // Get the translation slug from the post data
+    const translatedSlug = currentPost.data.relatedSlug;
+
+    if (!translatedSlug) {
+      return null;
+    }
+
+    // Verify the translated post exists
+    const translatedPost = posts.find(post => {
+      const slug = post.id.replace(/^(en|es)\//, '');
+      return slug === translatedSlug && post.id.startsWith(`${targetLang}/`);
+    });
+
+    if (!translatedPost) {
+      return null;
+    }
+
+    // Build the final path with correct language prefix
+    // Spanish (default): /blog/{slug}
+    // English: /en/blog/{slug}
+    const finalPath = targetLang === defaultLang
+      ? `/blog/${translatedSlug}`
+      : `/${targetLang}/blog/${translatedSlug}`;
+
+    return finalPath;
+  } catch (error) {
+    console.error('[getTranslatedBlogPath] Error:', error);
+    return null;
+  }
+}

@@ -8,13 +8,14 @@ image:
   url: "/projects/snapcompress.webp"
   alt: "Astro 5 logo"
 draft: false
+relatedSlug: "introduccion-astro-5"
 ---
 
-## Why I Migrated My Portfolio to Astro 5
+## Why I migrated my portfolio to Astro 5
 
-After trying Next.js, Gatsby, and other frameworks, Astro 5 convinced me with its radical approach: **zero JavaScript by default**. It's not marketing—it's an architectural decision that changes the game.
+After trying Next.js, Gatsby, and other frameworks, Astro 5 won me over with its radical approach: **zero JavaScript by default**. This isn't marketing hype—it's an architectural decision that changes the game.
 
-### The Problem Astro Solves
+### The problem Astro solves
 
 Most modern frameworks ship all JavaScript code to the browser, even for static content. This results in:
 
@@ -22,13 +23,13 @@ Most modern frameworks ship all JavaScript code to the browser, even for static 
 - **Time to Interactive (TTI)** of 3-5 seconds on mobile
 - **JavaScript execution time** that blocks the main thread
 
-Astro inverts the paradigm: **HTML first, JavaScript only when necessary**.
+Astro flips the paradigm: **HTML first, JavaScript only when necessary**.
 
-## Content Layer API: The Change That Matters
+## Content Layer API: The game-changing feature
 
-The biggest innovation in Astro 5 is the Content Layer API. Previously, Content Collections only supported local files. Now you can load content from any source.
+Astro 5's biggest innovation is the Content Layer API. Previously, Content Collections only supported local files. Now you can load content from any source.
 
-### Practical Example: Blog with Headless CMS
+### Practical example: Blog with headless CMS
 
 ```typescript
 import { defineCollection, z } from 'astro:content';
@@ -54,29 +55,29 @@ const blog = defineCollection({
 export const collections = { blog };
 ```
 
-### Advantages of the New Loader System
+### Advantages of the new loader system
 
-**1. Real Type-Safety**
+**1. Real type-safety**
 
-Before, TypeScript trusted that your files followed the schema. Now, with Zod validation:
+Before, TypeScript trusted your files followed the schema. Now, with Zod validation:
 
 ```typescript
-// ❌ This will fail at BUILD TIME, not runtime
+// ❌ This will FAIL at BUILD TIME, not runtime
 ---
 title: 123  # Error: Expected string, received number
 pubDate: "invalid-date"  # Error: Invalid date
 ---
 ```
 
-**2. Build Performance**
+**2. Build performance**
 
-In my portfolio (20 pages), the build improved from **45s to 12s**. Why?
+In my portfolio (20 pages), build time improved from **45s to 12s**. Why?
 
 - **Smart caching**: Only recompiles modified files
 - **Parallel processing**: Processes multiple sources simultaneously
 - **Optimized tree-shaking**: Eliminates unused code from Zod validations
 
-**3. Unlimited Flexibility**
+**3. Unlimited flexibility**
 
 You can combine multiple sources:
 
@@ -93,16 +94,16 @@ const externalBlog = defineCollection({
 });
 ```
 
-## Islands Architecture: Selective Hydration
+## Islands Architecture: Selective hydration
 
-This is the concept that differentiates Astro from other frameworks.
+This is the concept that sets Astro apart from other frameworks.
 
-### Traditional Problem
+### Traditional problem
 
 With Next.js or Nuxt, if you have an interactive button, **the entire page** gets hydrated:
 
 ```jsx
-// Next.js: Ships ENTIRE bundle to browser
+// Next.js: Ships the ENTIRE bundle to the browser
 export default function Page() {
   return (
     <div>
@@ -115,7 +116,7 @@ export default function Page() {
 }
 ```
 
-### Astro Solution
+### Astro solution
 
 ```astro
 ---
@@ -132,33 +133,33 @@ import Footer from './Footer.astro';
 <Footer />
 ```
 
-**Real result**: My homepage went from **180KB of JS** (Next.js) to **12KB** (only dark mode button).
+**Real results**: My homepage went from **180KB of JS** (Next.js) to **12KB** (just the dark mode toggle).
 
-## Hydration Directives: When to Use Each
+## Hydration directives: When to use each one
 
-| Directive | Best Use | JS Bundle |
-|-----------|----------|-----------|
+| Directive | Ideal use | JS Bundle |
+|-----------|-----------|-----------|
 | `client:load` | Critical above-the-fold components | Loads immediately |
 | `client:idle` | Non-critical widgets | Waits for `requestIdleCallback` |
 | `client:visible` | Below-the-fold components | Loads when entering viewport |
-| `client:media` | Responsive components | Conditional by media query |
+| `client:media` | Responsive components | Conditional per media query |
 | `client:only` | Embedded SPAs | Browser only |
 
-### Real Example: Image Gallery
+### Real example: Image gallery
 
 ```astro
 ---
 import ImageGallery from '@components/ImageGallery.react';
 ---
 
-<!-- Only loads when user scrolls to it -->
+<!-- Only loads when user scrolls here -->
 <ImageGallery
   client:visible
   images={galleryImages}
 />
 ```
 
-## Migration from Another Framework
+## Migrating from another framework
 
 ### From Next.js
 
@@ -195,7 +196,7 @@ export async function getStaticPaths() {
 
 ```astro
 ---
-// This runs on the server during build
+// This executes on the server during build
 const response = await fetch('https://api.example.com/data');
 const data = await response.json();
 ---
@@ -203,7 +204,7 @@ const data = await response.json();
 <div>{data.title}</div>
 ```
 
-## Real Benchmarks: My Portfolio
+## Real benchmarks: My portfolio
 
 **Before (Next.js 14):**
 - First Contentful Paint: 1.2s
@@ -215,11 +216,11 @@ const data = await response.json();
 - First Contentful Paint: 0.4s ⚡
 - Time to Interactive: 0.6s ⚡
 - Total Blocking Time: 0ms ⚡
-- Bundle size: 18KB (only dark mode toggle)
+- Bundle size: 18KB (dark mode toggle only)
 
-**Lighthouse Score: 100/100** in all categories.
+**Lighthouse Score: 100/100** across all categories.
 
-## Ideal Use Cases
+## Ideal use cases
 
 **✅ Perfect for:**
 - Blogs and portfolios
@@ -229,14 +230,14 @@ const data = await response.json();
 - High-performance landing pages
 
 **❌ Not recommended for:**
-- Real-time dashboards
-- SPAs with lots of shared state
+- Dashboards with real-time updates
+- SPAs with heavy shared state
 - Apps requiring dynamic SSR (use Astro with SSR adapter)
-- Gmail or Figma-like applications
+- Apps like Gmail or Figma
 
-## Production Tips
+## Production tips
 
-### 1. Image Optimization
+### 1. Image optimization
 
 ```astro
 ---
@@ -244,7 +245,7 @@ import { Image } from 'astro:assets';
 import heroImage from '@assets/hero.jpg';
 ---
 
-<!-- Generates multiple sizes automatically -->
+<!-- Automatically generates multiple sizes -->
 <Image
   src={heroImage}
   alt="Hero"
@@ -254,7 +255,7 @@ import heroImage from '@assets/hero.jpg';
 />
 ```
 
-### 2. Prefetching for Instant Navigation
+### 2. Prefetching for instant navigation
 
 ```astro
 <script>
@@ -271,7 +272,7 @@ import heroImage from '@assets/hero.jpg';
 </script>
 ```
 
-### 3. Dark Mode Without FOUC (Flash of Unstyled Content)
+### 3. Dark mode without FOUC (Flash of Unstyled Content)
 
 ```astro
 <script is:inline>
@@ -286,7 +287,7 @@ import heroImage from '@assets/hero.jpg';
 Astro 5 isn't "just another framework." It's a radical bet on performance without sacrificing DX. After 6 months using it in production:
 
 - **Faster deployments**: Builds from 45s to 12s
-- **Reduced costs**: CDN edge hosting at $0/month (Vercel free tier)
+- **Lower costs**: CDN edge hosting at $0/month (Vercel free tier)
 - **Improved SEO**: Perfect Core Web Vitals
 - **Less complexity**: No hydration bugs, no bundle size anxiety
 

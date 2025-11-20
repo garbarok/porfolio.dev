@@ -21,6 +21,26 @@
     "about": "About me",
     "contact": "Contact"
   },
+  "contact": {
+    "description": "Have a project in mind? Want to collaborate? Send me a message and let's talk.",
+    "form": {
+      "name": "Full name",
+      "namePlaceholder": "Your name",
+      "email": "Email",
+      "emailPlaceholder": "your@email.com",
+      "subject": "Subject",
+      "subjectPlaceholder": "What would you like to talk about?",
+      "message": "Message",
+      "messagePlaceholder": "Tell me about your project or idea...",
+      "required": "Required fields",
+      "submit": "Send message",
+      "sending": "Sending..."
+    },
+    "success": "Message sent successfully! I'll reply soon.",
+    "error": "An error occurred while sending the message.",
+    "connectionError": "Connection error. Please try again.",
+    "directEmail": "You can also write to me directly at"
+  },
   "blog": {
     "recentPosts": "Recent Posts",
     "readMore": "Read more",
@@ -33,7 +53,13 @@
     "relatedPosts": "Related Posts",
     "tableOfContents": "Table of Contents",
     "share": "Share",
-    "shareOn": "Share on"
+    "shareOn": "Share on",
+    "shareThisArticle": "Share this article",
+    "shareOnTwitter": "Share on Twitter",
+    "shareOnLinkedIn": "Share on LinkedIn",
+    "viewAll": "View all articles",
+    "comingSoon": "I will soon be publishing articles about web development and technology.",
+    "authorTitle": "Web Developer"
   },
   "meta": {
     "title": "Óscar Gallego - Full Stack Developer | Angular, NestJS & Next.js",

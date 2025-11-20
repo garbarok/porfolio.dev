@@ -8,6 +8,7 @@ image:
   url: "/projects/snapcompress.webp"
   alt: "Astro 5 logo"
 draft: false
+relatedSlug: "introduction-astro-5"
 ---
 
 ## Por qué migré mi portfolio a Astro 5

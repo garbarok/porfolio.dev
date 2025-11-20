@@ -1,5 +1,9 @@
 ---
-// Navigation component to return to blog list
+import { getLangFromUrl, useTranslations, getLocalizedPath } from '@/i18n/utils'
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+const blogUrl = getLocalizedPath('/blog', lang)
 ---
 
 <nav
@@ -7,10 +11,10 @@
 >
   <div class="flex items-center justify-center">
     <a
-      href="/blog"
+      href={blogUrl}
       class="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-sky-500 to-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-lg transition-transform hover:scale-105 hover:shadow-xl"
     >
-      Ver todos los artículos
+      {t('blog.viewAll')}
       <svg
         class="h-4 w-4 transition-transform group-hover:translate-x-1"
         fill="none"

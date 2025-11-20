@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import { formatDate } from "@/utils/blog";
+import { getLangFromUrl, useTranslations } from "@/i18n/utils";
 
 interface Props {
   post: CollectionEntry<"blog">;
@@ -8,6 +9,11 @@ interface Props {
 }
 
 const { post, readingTime } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+// Determine the post language from its ID
+const postLang = post.id.startsWith('en/') ? 'en' : 'es';
 ---
 
 <header class="mx-auto max-w-3xl">
@@ -15,10 +21,10 @@ const { post, readingTime } = Astro.props;
     class="flex flex-wrap items-center gap-2 text-sm text-gray-600 dark:text-gray-400"
   >
     <time datetime={post.data.pubDate.toISOString()}>
-      {formatDate(post.data.pubDate)}
+      {formatDate(post.data.pubDate, postLang)}
     </time>
     <span class="text-gray-300 dark:text-gray-600">·</span>
-    <span>{readingTime} min de lectura</span>
+    <span>{readingTime} {t('blog.minRead')}</span>
     {
       post.data.tags.length > 0 && (
         <>
@@ -57,7 +63,7 @@ const { post, readingTime } = Astro.props;
       <p class="font-semibold text-gray-900 dark:text-white">
         {post.data.author}
       </p>
-      <p class="text-sm text-gray-600 dark:text-gray-400">Desarrollador Web</p>
+      <p class="text-sm text-gray-600 dark:text-gray-400">{t('blog.authorTitle')}</p>
     </div>
   </div>
 </header>

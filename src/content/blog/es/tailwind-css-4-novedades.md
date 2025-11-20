@@ -5,6 +5,10 @@ pubDate: 2025-01-10
 author: "Óscar Gallego"
 tags: ["tailwindcss", "css", "frontend"]
 draft: false
+relatedSlug: "tailwind-css-4-news"
+image:
+  url: "/projects/snapcompress.webp"
+  alt: "Tailwind CSS 4 logo"
 ---
 
 ## La migración que rompe todo (y por qué vale la pena)

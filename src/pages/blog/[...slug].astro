@@ -9,14 +9,15 @@ import ArticleContent from "@components/blog/article-content.astro";
 import ShareSection from "@components/blog/share-section.astro";
 import ArticleNavigation from "@components/blog/article-navigation.astro";
 import { formatDate, calculateReadingTime } from "@/utils/blog";
+import { useTranslations } from "@/i18n/utils";
 
-// Generate static paths for all blog posts
+// Generate static paths for Spanish blog posts only
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
   return posts
-    .filter((post) => !post.data.draft)
+    .filter((post) => !post.data.draft && post.id.startsWith('es/'))
     .map((post) => ({
-      params: { slug: post.id },
+      params: { slug: post.id.replace('es/', '') },
       props: { post },
     }));
 }
@@ -28,6 +29,7 @@ interface Props {
 const { post } = Astro.props;
 const { Content, headings } = await render(post);
 const readingTime = calculateReadingTime(post.body || "");
+const t = useTranslations('es');
 ---
 
 <Layout
@@ -103,7 +105,7 @@ const readingTime = calculateReadingTime(post.body || "");
 
   <article class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
     <!-- Back button -->
-    <div class="mb-8 mt-16">
+    <div class="mb-8 mt-4">
       <a
         href="/blog"
         class="group inline-flex items-center gap-2 text-sm font-medium text-gray-600 transition-colors hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400"
@@ -167,7 +169,7 @@ const readingTime = calculateReadingTime(post.body || "");
                 <p class="text-sm text-gray-600 dark:text-gray-400">
                   Última actualización:{" "}
                   <time datetime={post.data.updatedDate.toISOString()}>
-                    {formatDate(post.data.updatedDate)}
+                    {formatDate(post.data.updatedDate, 'es')}
                   </time>
                 </p>
               </div>
@@ -175,11 +177,22 @@ const readingTime = calculateReadingTime(post.body || "");
           }
 
           <!-- Share Section -->
-          <ShareSection title={post.data.title} url={Astro.url.href} />
+          <ShareSection
+            title={post.data.title}
+            url={Astro.url.href}
+            shareText={t('blog.shareThisArticle')}
+            shareOnTwitter={t('blog.shareOnTwitter')}
+            shareOnLinkedIn={t('blog.shareOnLinkedIn')}
+          />
 
           <!-- Related Posts -->
           <div class="mt-16 border-t border-gray-200 pt-12 dark:border-gray-800">
-            <RelatedPosts currentPost={post} limit={3} />
+            <RelatedPosts
+              currentPost={post}
+              limit={3}
+              relatedPostsTitle={t('blog.relatedPosts')}
+              lang="es"
+            />
           </div>
         </div>
       </div>

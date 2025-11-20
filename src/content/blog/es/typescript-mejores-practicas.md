@@ -5,6 +5,10 @@ pubDate: 2025-01-05
 author: "Óscar Gallego"
 tags: ["typescript", "javascript", "best practices"]
 draft: false
+relatedSlug: "typescript-best-practices"
+image:
+  url: "/projects/snapcompress.webp"
+  alt: "TypeScript logo"
 ---
 
 ## El costo real de no usar TypeScript

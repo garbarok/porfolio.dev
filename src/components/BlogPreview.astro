@@ -1,13 +1,19 @@
 ---
 import { getCollection } from 'astro:content'
 import BlogCard from './blog/blog-card.astro'
+import { getLangFromUrl, useTranslations } from '@/i18n/utils'
 
-// Get the 3 most recent blog posts
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+
+// Get the 3 most recent blog posts for the current language
 const allPosts = await getCollection('blog')
 const recentPosts = allPosts
-  .filter((post) => !post.data.draft)
+  .filter((post) => !post.data.draft && post.id.startsWith(`${lang}/`))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
   .slice(0, 3)
+
+const blogUrl = lang === 'es' ? '/blog' : '/en/blog'
 ---
 
 <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -18,7 +24,7 @@ const recentPosts = allPosts
   recentPosts.length === 0 && (
     <div class="rounded-xl border border-gray-200/50 bg-white/50 p-12 text-center backdrop-blur-sm dark:border-gray-800/50 dark:bg-gray-900/50">
       <p class="text-gray-600 dark:text-gray-400">
-        Próximamente publicaré artículos sobre desarrollo web y tecnología.
+        {t('blog.comingSoon')}
       </p>
     </div>
   )
@@ -26,10 +32,10 @@ const recentPosts = allPosts
 
 <div class="mt-8 flex justify-center">
   <a
-    href="/blog"
+    href={blogUrl}
     class="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-sky-500 to-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-lg transition-transform hover:scale-105 hover:shadow-xl"
   >
-    Ver todos los artículos
+    {t('blog.viewAll')}
     <svg
       class="h-4 w-4 transition-transform group-hover:translate-x-1"
       fill="none"

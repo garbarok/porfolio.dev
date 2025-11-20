@@ -37,7 +37,7 @@ const currentPath = Astro.url.pathname;
 ---
 
 <header
-  class="fixed top-0 z-10 mx-auto mt-2 flex w-full items-center justify-center"
+  class="fixed top-0 z-50 mx-auto mt-2 flex w-full items-center justify-center"
 >
   <!-- Desktop Navigation -->
   <nav
@@ -66,7 +66,7 @@ const currentPath = Astro.url.pathname;
     <!-- Hamburger Button -->
     <button
       id="mobile-menu-button"
-      class="flex items-center justify-center rounded-full bg-gray-900 p-3 text-white shadow-lg backdrop-blur-md hover:bg-gray-800 transition"
+      class="relative z-50 flex items-center justify-center rounded-full bg-gray-900 p-3 text-white shadow-lg backdrop-blur-md hover:bg-gray-800 transition"
       aria-label="Toggle menu"
       aria-expanded="false"
     >
@@ -81,9 +81,9 @@ const currentPath = Astro.url.pathname;
     <!-- Mobile Menu Overlay -->
     <div
       id="mobile-menu"
-      class="fixed inset-0 top-16 bg-gray-900/95 backdrop-blur-lg hidden"
+      class="fixed inset-0 z-40 bg-gray-900/95 backdrop-blur-lg hidden"
     >
-      <nav class="flex flex-col items-center gap-6 p-8">
+      <nav class="flex flex-col items-center gap-6 p-8 pt-20">
         {
           navItems.map((link) => (
             <a

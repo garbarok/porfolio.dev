@@ -1,11 +1,29 @@
 ---
-import { getLangFromUrl } from '@/i18n/utils';
+import { getLangFromUrl, getTranslatedBlogPath } from '@/i18n/utils';
 
 const lang = getLangFromUrl(Astro.url);
 const currentPath = Astro.url.pathname;
 
 // Generate the alternate language URL
-const getAlternateUrl = () => {
+const getAlternateUrl = async () => {
+  const targetLang = lang === 'es' ? 'en' : 'es';
+
+  // Check if we're on a blog post page
+  const blogPostMatch = currentPath.match(/^\/(en\/)?blog\/(.+)$/);
+
+  if (blogPostMatch) {
+    const slug = blogPostMatch[2];
+    const translatedPath = await getTranslatedBlogPath(slug, lang, targetLang);
+
+    // If translation exists, use it; otherwise fallback to blog index
+    if (translatedPath) {
+      return translatedPath;
+    }
+    // Fallback to blog index if no translation found
+    return targetLang === 'es' ? '/blog' : '/en/blog';
+  }
+
+  // For non-blog pages, use simple path translation
   if (lang === 'es') {
     // Switch to English
     return currentPath === '/' ? '/en' : `/en${currentPath}`;
@@ -15,7 +33,7 @@ const getAlternateUrl = () => {
   }
 };
 
-const alternateUrl = getAlternateUrl();
+const alternateUrl = await getAlternateUrl();
 const alternateLang = lang === 'es' ? 'en' : 'es';
 const alternateLangName = lang === 'es' ? 'EN' : 'ES';
 ---
