@@ -66,10 +66,10 @@ const shouldLoadGA = isProduction && GA_MEASUREMENT_ID
         console.log('[GA Debug] Initializing gtag with ID: ${GA_MEASUREMENT_ID}');
 
         window.dataLayer = window.dataLayer || [];
-        function gtag() {
+        window.gtag = function gtag() {
           console.log('[GA Debug] gtag called with:', arguments);
-          dataLayer.push(arguments);
-        }
+          window.dataLayer.push(arguments);
+        };
 
         gtag("js", new Date());
         gtag("config", "${GA_MEASUREMENT_ID}");
@@ -83,22 +83,22 @@ const shouldLoadGA = isProduction && GA_MEASUREMENT_ID
 
         document.addEventListener('astro:page-load', () => {
           console.log('[GA Debug] astro:page-load event fired');
-          console.log('[GA Debug] gtag available:', typeof gtag !== 'undefined');
+          console.log('[GA Debug] window.gtag available:', typeof window.gtag !== 'undefined');
 
-          if (typeof gtag !== 'undefined') {
+          if (typeof window.gtag !== 'undefined') {
             console.log('[GA Debug] Sending page_view event:', {
               page_path: window.location.pathname,
               page_title: document.title,
               page_location: window.location.href
             });
 
-            gtag('event', 'page_view', {
+            window.gtag('event', 'page_view', {
               page_path: window.location.pathname,
               page_title: document.title,
               page_location: window.location.href
             });
           } else {
-            console.warn('[GA Debug] gtag not available for View Transitions tracking');
+            console.warn('[GA Debug] window.gtag not available for View Transitions tracking');
           }
         });
 
