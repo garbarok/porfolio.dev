@@ -19,6 +19,24 @@ const shouldLoadGA = isProduction && GA_MEASUREMENT_ID
 {
   shouldLoadGA && (
     <>
+      <!-- Partytown Proxy Configuration -->
+      <script is:inline set:html={`
+        window.partytown = window.partytown || {};
+        window.partytown.resolveUrl = function(url, location) {
+          // Proxy Google Tag Manager scripts through Vercel
+          if (url.hostname === "www.googletagmanager.com") {
+            var proxyUrl = new URL(location.origin + "/proxy/gtag" + url.pathname + url.search);
+            return proxyUrl;
+          }
+          // Proxy Google Analytics scripts through Vercel
+          if (url.hostname === "www.google-analytics.com") {
+            var proxyUrl = new URL(location.origin + "/proxy/analytics" + url.pathname + url.search);
+            return proxyUrl;
+          }
+          return url;
+        };
+      `} />
+
       <!-- Google tag (gtag.js) with Partytown -->
       <script
         is:inline
