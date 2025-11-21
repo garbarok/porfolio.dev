@@ -25,10 +25,15 @@
 </button>
 
 <script>
-  import { initScrollToTop } from '@/utils/scrollToTop';
+  import { initScrollToTop, cleanupScrollToTop } from '@/utils/scrollToTop';
 
   // Initialize scroll-to-top functionality
   initScrollToTop();
+
+  // Clean up before page unload (for view transitions)
+  document.addEventListener('astro:before-preparation', () => {
+    cleanupScrollToTop();
+  });
 
   // Re-initialize on page navigation (for view transitions)
   document.addEventListener('astro:page-load', () => {

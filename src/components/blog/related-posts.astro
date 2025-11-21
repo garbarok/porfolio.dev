@@ -69,7 +69,14 @@ const postsToShow = [...relatedPosts, ...recentPosts]
                 {formatDate(post.data.pubDate, lang)}
               </time>
               <h3 class="mt-2 text-base font-semibold leading-tight text-gray-900 transition-colors group-hover:text-blue-600 dark:text-white dark:group-hover:text-blue-400">
-                <a href={lang === 'es' ? `/blog/${post.id.replace('es/', '')}` : `/${lang}/blog/${post.id.replace(`${lang}/`, '')}`}>
+                <a
+                  href={lang === 'es' ? `/blog/${post.id.replace('es/', '')}` : `/${lang}/blog/${post.id.replace(`${lang}/`, '')}`}
+                  data-blog-card-link
+                  data-article-title={post.data.title}
+                  data-article-slug={post.id.replace('es/', '').replace('en/', '')}
+                  data-click-location="related"
+                  data-article-tags={post.data.tags.join(',')}
+                >
                   <span class="absolute inset-0" />
                   {post.data.title}
                 </a>
@@ -90,3 +97,32 @@ const postsToShow = [...relatedPosts, ...recentPosts]
     </>
   )
 }
+
+<script>
+  import { trackBlogCardClick } from '@/utils/blog-analytics'
+
+  function initRelatedPostsTracking() {
+    const relatedPostLinks = document.querySelectorAll('[data-blog-card-link][data-click-location="related"]')
+
+    relatedPostLinks.forEach((link) => {
+      link.addEventListener('click', () => {
+        const articleTitle = link.getAttribute('data-article-title') || ''
+        const articleSlug = link.getAttribute('data-article-slug') || ''
+        const tags = link.getAttribute('data-article-tags')?.split(',') || []
+
+        trackBlogCardClick({
+          articleTitle,
+          articleSlug,
+          clickLocation: 'related',
+          tags,
+        })
+      })
+    })
+  }
+
+  // Initialize on page load
+  document.addEventListener('DOMContentLoaded', initRelatedPostsTracking)
+
+  // Reinitialize after view transitions
+  document.addEventListener('astro:page-load', initRelatedPostsTracking)
+</script>

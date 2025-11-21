@@ -1,6 +1,6 @@
 ---
-title: "Astro Content Collections: Why Your Schema Fields Are Missing"
-description: "A debugging journey: How an incorrect content config file location can make your Astro schema fields disappear, and how to fix it."
+title: "Astro Debugging: Fixed \"Missing Schema Fields\" in 5 Min"
+description: "Can't find your Astro schema fields? You're likely editing the wrong file. Learn the #1 mistake developers make with `content.config.ts` and fix it instantly. ✓"
 pubDate: 2025-11-18
 author: "Óscar Gallego"
 tags: ["astro", "debugging", "content collections", "typescript"]
@@ -10,6 +10,19 @@ image:
   url: "https://res.cloudinary.com/dl0qx4iof/image/upload/blog/astro-debugging.png"
   alt: "A developer debugging Astro configuration files on a computer screen."
 ---
+
+## Why Aren't My Astro Schema Fields Updating?
+
+If you've added fields to your Astro Content Collections schema and they aren't appearing, the most common problem is a mistake in the configuration file's location or name. Astro is very strict and only looks for a single configuration file in a specific location: `src/content.config.ts`.
+
+Before deep-diving into debugging, run through this checklist:
+
+1.  **Correct Location:** Ensure your config file is at the root of `src/`, not inside `src/content/`.
+    - ✅ **Correct:** `src/content.config.ts`
+    - ❌ **Incorrect:** `src/content/config.ts`
+2.  **Exact Name:** The file must be named `content.config.ts`. Any other variation will be ignored.
+3.  **No Duplicates:** Search your project to make sure another configuration file doesn't exist that Astro might be reading instead.
+4.  **Clear the Cache:** Delete the `.astro` directory and restart the dev server to force Astro to regenerate types from the correct configuration file.
 
 Have you ever defined a field in your Astro content collection schema, only for it to vanish at runtime? You're not alone. I recently spent hours debugging an issue where my schema fields were inexplicably missing, despite being correctly defined.
 

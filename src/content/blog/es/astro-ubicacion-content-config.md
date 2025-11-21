@@ -1,6 +1,6 @@
 ---
-title: "Astro Content Collections: Por qué Desaparecen tus Campos del Schema"
-description: "Una odisea de depuración: Cómo una ubicación incorrecta del archivo de configuración de contenido puede hacer desaparecer tus campos de schema en Astro y cómo solucionarlo."
+title: "Debug Astro: Arregla \"Campos de Schema Ocultos\" en 5 Min"
+description: "¿No encuentras tus campos de schema en Astro? Probablemente editas el archivo incorrecto. Aprende el error #1 con `content.config.ts` y soluciónalo al instante. ✓"
 pubDate: 2025-11-18
 author: "Óscar Gallego"
 tags: ["astro", "debugging", "content collections", "typescript"]
@@ -10,6 +10,19 @@ image:
   url: "https://res.cloudinary.com/dl0qx4iof/image/upload/blog/astro-debugging.png"
   alt: "Un desarrollador depurando archivos de configuración de Astro en una pantalla de ordenador."
 ---
+
+## ¿Por Qué No se Actualizan los Campos de mi Schema en Astro?
+
+Si has añadido campos a tu schema de Astro Content Collections y no aparecen, el problema más común es un error en la ubicación o el nombre del archivo de configuración. Astro es muy estricto y solo busca un archivo de configuración en una ubicación específica: `src/content.config.ts`.
+
+Antes de depurar a fondo, revisa esta checklist:
+
+1.  **Ubicación Correcta:** Asegúrate de que tu archivo de configuración esté en la raíz de `src/`, no dentro de `src/content/`.
+    - ✅ **Correcto:** `src/content.config.ts`
+    - ❌ **Incorrecto:** `src/content/config.ts`
+2.  **Nombre Exacto:** El archivo debe llamarse `content.config.ts`. Cualquier otra variación será ignorada.
+3.  **Sin Duplicados:** Busca en tu proyecto para asegurarte de que no exista otro archivo de configuración que Astro pueda estar leyendo en su lugar.
+4.  **Limpia la Caché:** Elimina el directorio `.astro` y reinicia el servidor de desarrollo para forzar a Astro a regenerar los tipos a partir del archivo de configuración correcto.
 
 ¿Alguna vez has definido un campo en tu schema de Astro Content Collections solo para que se desvanezca en tiempo de ejecución? No estás solo. Recientemente pasé horas depurando un problema en el que los campos de mi schema desaparecían inexplicablemente, a pesar de estar definidos correctamente.
 

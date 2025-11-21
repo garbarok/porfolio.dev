@@ -1,15 +1,24 @@
 ---
-title: "Introducción a Astro 5: El framework del futuro"
-description: "Descubre las nuevas características de Astro 5 y por qué es el mejor framework para construir sitios web rápidos y modernos."
+title: "Astro 5: 100 Core Web Vitals y 90% Menos JS"
+description: "¿Cansado de sitios lentos? Astro 5 logra un Lighthouse score perfecto con su arquitectura cero JS. ¡Aprende a mejorar el rendimiento y tu SEO hoy! ★"
 pubDate: 2025-11-15
 author: "Óscar Gallego"
 tags: ["astro", "web development", "javascript"]
 image:
   url: "https://res.cloudinary.com/dl0qx4iof/image/upload/blog/astro-introduction.png"
   alt: "Astro 5 framework - rocket illustration with zero JavaScript concept"
-draft: false
-relatedSlug: "introduction-astro-5"
 ---
+
+## ¿Qué es Astro y Cuáles son sus Novedades en la Versión 5?
+
+Astro es un framework web moderno diseñado para construir sitios rápidos y centrados en el contenido, como blogs, portfolios y webs de marketing. Su principal característica es la arquitectura de "cero JavaScript por defecto", que envía solo HTML y CSS al navegador, y carga JavaScript únicamente para los componentes interactivos que lo necesitan.
+
+Las principales novedades de Astro 5 se centran en mejorar el rendimiento y la flexibilidad:
+
+- **Content Layer API:** Unifica la carga de contenido desde múltiples fuentes (archivos locales, CMS headless) con validación de datos y type-safety en tiempo de build gracias a su sistema de *loaders*.
+- **Islands Architecture Mejorada:** Permite una hidratación de componentes más granular con directivas como `client:visible`, lo que reduce drásticamente la cantidad de JavaScript enviado al cliente.
+- **Builds más Rápidos:** El nuevo sistema de caché y el procesamiento en paralelo han reducido los tiempos de build hasta en un 75%.
+- **Optimización de Assets Integrada:** El componente `<Image />` ahora maneja la optimización de imágenes, generando múltiples tamaños y formatos automáticamente.
 
 ## Por qué migré mi portfolio a Astro 5
 

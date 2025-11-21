@@ -1,6 +1,6 @@
 ---
-title: "¿Tests Pasan Localmente pero Fallan en Vercel? Aquí el Por Qué"
-description: "Entendiendo por qué tus tests de Next.js funcionan perfectamente en tu máquina pero fallan misteriosamente en el entorno CI de Vercel - y cómo solucionarlo."
+title: "Infierno en Vercel CI: Arregla Tests de Next.js Fallando"
+description: "¿Tests pasan local pero fallan en Vercel? No pierdas más horas. El error suele ser un `NODE_ENV` o timeout en tu config de Vitest. ¡Aprende a arreglarlo ya!"
 pubDate: 2025-10-12
 author: "Óscar Gallego"
 tags: ["nextjs", "vercel", "testing", "ci-cd", "vitest", "react"]
@@ -10,6 +10,18 @@ image:
   url: "https://res.cloudinary.com/dl0qx4iof/image/upload/blog/vercel-tests.png"
   alt: "Tests passing locally but failing in Vercel CI environment"
 ---
+
+## ¿Por Qué Mis Tests Pasan en Local Pero Fallan en Vercel?
+
+Cuando los tests funcionan en tu máquina pero fallan en el CI de Vercel, generalmente se debe a dos diferencias clave en el entorno: una configuración incorrecta de `NODE_ENV` y timeouts más cortos de lo necesario debido a que el hardware del CI es más lento.
+
+Aquí tienes una checklist para diagnosticar y solucionar el problema rápidamente:
+
+1.  **Forzar `NODE_ENV` a `'test'`:** Asegúrate de que tu `vitest.config.ts` contenga `env: { NODE_ENV: 'test' }`. Vercel puede usar el modo de producción por defecto, lo que elimina utilidades de testing de React.
+2.  **Aumentar los Timeouts para CI:** El CI de Vercel es 5-10 veces más lento que una máquina local. Incrementa los timeouts de los tests usando una variable de entorno: `const TIMEOUT = process.env.CI ? 10000 : 5000;`.
+3.  **Revisar Logs de Vercel:** Busca tests específicos que fallen o tarden demasiado. El error `actImplementation is not a function` suele ser un síntoma del problema de `NODE_ENV`.
+4.  **Usar Mocks para Operaciones Pesadas:** Evita operaciones de I/O de archivos o la creación de datos muy grandes en los tests. Usa mocks ligeros en su lugar.
+5.  **No Asumir Problemas de Librerías:** Antes de pensar en problemas de compatibilidad entre versiones, revisa la configuración del entorno. Es la causa más común.
 
 ## El Problema
 

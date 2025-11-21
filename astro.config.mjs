@@ -6,6 +6,7 @@ import markdoc from "@astrojs/markdoc";
 import tailwindcss from "@tailwindcss/vite";
 import remarkToc from "remark-toc";
 import remarkCollapse from "remark-collapse";
+import sentry from "@sentry/astro";
 
 // https://astro.build/config
 export default defineConfig({
@@ -21,6 +22,7 @@ export default defineConfig({
 
   integrations: [
     robotsTxt(),
+    sentry(),
     sitemap({
       i18n: {
         defaultLocale: "es",

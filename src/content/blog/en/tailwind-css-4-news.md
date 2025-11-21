@@ -1,6 +1,6 @@
 ---
-title: "Tailwind CSS 4: Everything You Need to Know"
-description: "Explore the new features of Tailwind CSS 4 and how to leverage them in your web projects."
+title: "Tailwind CSS 4: 10x Faster Builds with New Rust Engine"
+description: "Is migrating to Tailwind CSS 4 worth it? See real benchmarks (9.5x faster builds, 75% less memory) and learn how to handle the new CSS-first config. ✓"
 pubDate: 2025-11-08
 author: "Óscar Gallego"
 tags: ["tailwindcss", "css", "frontend"]
@@ -10,6 +10,18 @@ image:
   url: "https://res.cloudinary.com/dl0qx4iof/image/upload/blog/tailwind-css-4.png"
   alt: "Tailwind CSS 4 performance - Rust engine optimization illustration"
 ---
+
+## What's New in Tailwind CSS 4?
+
+Tailwind CSS 4 is a complete rewrite of the framework, centered around a new Rust-powered compiler engine that delivers up to 10x performance improvements. The new version introduces a "CSS-first" configuration, removing the need for a `tailwind.config.js` file.
+
+The most important new features in Tailwind CSS 4 are:
+
+- **New Rust Engine:** Up to 10x faster builds and 75% less memory usage thanks to native parallelization.
+- **CSS-based Configuration:** The `tailwind.config.js` file is eliminated in favor of native CSS variables and the `@theme` directive within your main CSS file.
+- **Native Vite Integration:** It integrates directly as a Vite plugin (`@tailwindcss/vite`), removing the need for framework-specific wrappers like `@astrojs/tailwind`.
+- **CSS Plugins:** Plugins are now imported directly into the CSS using the `@plugin` directive.
+- **Native Container Queries Support:** Functionality that previously required a plugin is now built into the core.
 
 ## The Migration That Breaks Everything (and Why It's Worth It)
 

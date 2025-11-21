@@ -1,7 +1,6 @@
 ---
 import { getCollection, render, type CollectionEntry } from "astro:content";
 import Layout from "@layouts/Layout.astro";
-import ReadingProgress from "@components/blog/reading-progress.astro";
 import TableOfContents from "@components/blog/table-of-contents.astro";
 import RelatedPosts from "@components/blog/related-posts.astro";
 import ArticleHeader from "@components/blog/article-header.astro";
@@ -41,9 +40,6 @@ const t = useTranslations('en');
   modifiedTime={(post.data.updatedDate || post.data.pubDate).toISOString()}
   lang="en"
 >
-  <!-- Reading Progress Bar -->
-  <ReadingProgress />
-
   <!-- Structured Data for SEO - Article -->
   <script is:inline type="application/ld+json" set:html={JSON.stringify({
     "@context": "https://schema.org",
@@ -203,6 +199,63 @@ const t = useTranslations('en');
     <ArticleNavigation />
   </article>
 </Layout>
+
+<script is:inline define:vars={{ post, readingTime }}>
+  (function() {
+    // Initialize article tracking
+    function initArticleTracking() {
+      const articleContext = {
+        title: post.data.title,
+        slug: post.id.replace('es/', '').replace('en/', ''),
+        tags: post.data.tags || [],
+        language: post.id.startsWith('en/') ? 'en' : 'es',
+        author: post.data.author,
+        publishedDate: post.data.pubDate.toISOString(),
+        readingTime: readingTime,
+      }
+
+      // Import analytics functions dynamically
+      import('@/utils/blog-analytics').then(({
+        setBlogArticleContext,
+        trackArticleOpened,
+        trackTimeSpent,
+        trackBackToBlog
+      }) => {
+        // Set article context in Sentry
+        setBlogArticleContext(articleContext)
+
+        // Track article opened
+        trackArticleOpened(articleContext)
+
+        // Track time spent when user leaves
+        const startTime = Date.now()
+
+        const trackTimeOnPage = () => {
+          const timeSpent = Math.floor((Date.now() - startTime) / 1000)
+          trackTimeSpent(articleContext, timeSpent)
+        }
+
+        // Track on page unload
+        window.addEventListener('beforeunload', trackTimeOnPage)
+
+        // Track on navigation away (for SPAs)
+        document.addEventListener('astro:before-preparation', trackTimeOnPage)
+
+        // Track back to blog clicks
+        const backButtons = document.querySelectorAll('a[href="/en/blog"]')
+        backButtons.forEach((button) => {
+          button.addEventListener('click', trackBackToBlog)
+        })
+      })
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', initArticleTracking)
+
+    // Reinitialize after view transitions
+    document.addEventListener('astro:page-load', initArticleTracking)
+  })()
+</script>
 
 <style>
   /* Additional custom styles for code blocks */

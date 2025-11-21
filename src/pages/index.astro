@@ -1,21 +1,21 @@
 ---
-import Layout from "@layouts/Layout.astro";
+import Layout from '@layouts/Layout.astro'
 
-import AboutMe from "@components/AboutMe.astro";
-import Briefcase from "@components/icons/Briefcase.astro";
-import CodeIcon from "@components/icons/Code.astro";
-import Experience from "@components/Experience.astro";
-import ProfileCheck from "@components/icons/ProfileCheck.astro";
-import Projects from "@components/Projects.astro";
-import SectionContainer from "@components/SectionContainer.astro";
-import Hero from "@components/Hero.astro";
-import TitleSection from "@components/TitleSection.astro";
-import BlogPreview from "@components/BlogPreview.astro";
-import BookOpen from "@components/icons/BookOpen.astro";
-import { getLangFromUrl, useTranslations } from '@/i18n/utils';
+import AboutMe from '@components/AboutMe.astro'
+import Briefcase from '@components/icons/Briefcase.astro'
+import CodeIcon from '@components/icons/Code.astro'
+import Experience from '@components/Experience.astro'
+import ProfileCheck from '@components/icons/ProfileCheck.astro'
+import Projects from '@components/Projects.astro'
+import SectionContainer from '@components/SectionContainer.astro'
+import Hero from '@components/Hero.astro'
+import TitleSection from '@components/TitleSection.astro'
+import BlogPreview from '@components/BlogPreview.astro'
+import BookOpen from '@components/icons/BookOpen.astro'
+import { getLangFromUrl, useTranslations } from '@/i18n/utils'
 
-const lang = getLangFromUrl(Astro.url);
-const t = useTranslations(lang);
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
 ---
 
 <Layout
@@ -28,6 +28,15 @@ const t = useTranslations(lang);
     <SectionContainer class="py-16 md:py-36">
       <Hero />
     </SectionContainer>
+    <button id="error-button">Throw test error</button>
+    <script>
+      function handleClick() {
+        throw new Error('This is a test error')
+      }
+      document
+        ?.querySelector('#error-button')
+        ?.addEventListener('click', handleClick)
+    </script>
   </main>
   <div class="space-y-24">
     <SectionContainer id="experiencia">

@@ -1,6 +1,6 @@
 ---
-title: "Tests Pass Locally, Fail on Vercel? Here's Why"
-description: "Understanding why your Next.js tests work perfectly on your machine but mysteriously fail on Vercel's CI environment - and how to fix it."
+title: "Vercel CI Hell: Fix Next.js Tests Failing in Production"
+description: "Tests pass locally but fail on Vercel? Stop wasting hours. The fix is likely a missing `NODE_ENV` or timeout setting in your Vitest config. Learn how to fix it now!"
 pubDate: 2025-10-12
 author: "Óscar Gallego"
 tags: ["nextjs", "vercel", "testing", "ci-cd", "vitest", "react"]
@@ -10,6 +10,18 @@ image:
   url: "https://res.cloudinary.com/dl0qx4iof/image/upload/blog/vercel-tests.png"
   alt: "Tests passing locally but failing in Vercel CI environment"
 ---
+
+## Why Do My Tests Pass Locally But Fail on Vercel?
+
+When tests work on your machine but fail in Vercel's CI, it's usually due to two key environment differences: an incorrect `NODE_ENV` configuration and timeouts that are too short for the slower CI hardware.
+
+Here is a checklist to diagnose and fix the problem quickly:
+
+1.  **Force `NODE_ENV` to `'test'`:** Ensure your `vitest.config.ts` contains `env: { NODE_ENV: 'test' }`. Vercel might default to production mode, which strips out React's testing utilities.
+2.  **Increase Timeouts for CI:** Vercel's CI is 5-10x slower than a local machine. Increase test timeouts using an environment variable: `const TIMEOUT = process.env.CI ? 10000 : 5000;`.
+3.  **Check Vercel Logs:** Look for specific tests that are failing or taking too long. The `actImplementation is not a function` error is often a symptom of the `NODE_ENV` issue.
+4.  **Use Mocks for Heavy Operations:** Avoid file I/O or creating large amounts of data in tests. Use lightweight mocks instead.
+5.  **Don't Assume Library Issues:** Before assuming version compatibility problems, check your environment configuration. It's the most common cause.
 
 ## The Problem
 

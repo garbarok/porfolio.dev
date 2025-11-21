@@ -1,6 +1,7 @@
 ---
 // Reading Progress Bar Component
 // Shows progress as user scrolls through the article
+// Now with analytics tracking for reading milestones
 ---
 
 <div
@@ -16,9 +17,37 @@
 </div>
 
 <script>
+  import { trackReadingProgress, throttle } from '@/utils/blog-analytics'
+
   function initReadingProgress() {
     const progressBar = document.getElementById('reading-progress')
     if (!progressBar) return
+
+    // Track milestones (25%, 50%, 75%, 100%)
+    const milestones = new Set<25 | 50 | 75 | 100>()
+    const startTime = Date.now()
+
+    // Get article context from meta tags (set by article page)
+    const getArticleContext = () => {
+      const metaTitle = document.querySelector('meta[property="og:title"]')?.getAttribute('content')
+      const metaUrl = document.querySelector('meta[property="og:url"]')?.getAttribute('content')
+
+      if (!metaTitle || !metaUrl) return null
+
+      const pathParts = window.location.pathname.split('/')
+      const slug = pathParts[pathParts.length - 1] || pathParts[pathParts.length - 2]
+      const language = pathParts.includes('en') ? 'en' : 'es'
+
+      return {
+        title: metaTitle.replace(' - Blog', ''),
+        slug: slug,
+        tags: [], // Tags would need to be passed via data attribute if needed
+        language: language as 'es' | 'en',
+        author: 'Óscar Gallego',
+        publishedDate: new Date().toISOString(),
+        readingTime: 5, // Default, could be passed via data attribute
+      }
+    }
 
     function updateProgress() {
       if (!progressBar) return
@@ -34,10 +63,49 @@
 
       progressBar.style.width = `${clampedProgress}%`
       progressBar.setAttribute('aria-valuenow', clampedProgress.toString())
+
+      // Track milestones
+      const articleContext = getArticleContext()
+      if (articleContext) {
+        const timeSpent = Math.floor((Date.now() - startTime) / 1000)
+
+        if (clampedProgress >= 25 && !milestones.has(25)) {
+          milestones.add(25)
+          trackReadingProgress(articleContext, {
+            milestone: 25,
+            timeSpent,
+            scrollDepth: clampedProgress,
+          })
+        } else if (clampedProgress >= 50 && !milestones.has(50)) {
+          milestones.add(50)
+          trackReadingProgress(articleContext, {
+            milestone: 50,
+            timeSpent,
+            scrollDepth: clampedProgress,
+          })
+        } else if (clampedProgress >= 75 && !milestones.has(75)) {
+          milestones.add(75)
+          trackReadingProgress(articleContext, {
+            milestone: 75,
+            timeSpent,
+            scrollDepth: clampedProgress,
+          })
+        } else if (clampedProgress >= 100 && !milestones.has(100)) {
+          milestones.add(100)
+          trackReadingProgress(articleContext, {
+            milestone: 100,
+            timeSpent,
+            scrollDepth: clampedProgress,
+          })
+        }
+      }
     }
 
+    // Throttle updates to avoid too many calls
+    const throttledUpdate = throttle(updateProgress, 300)
+
     // Update on scroll
-    window.addEventListener('scroll', updateProgress, { passive: true })
+    window.addEventListener('scroll', throttledUpdate, { passive: true })
 
     // Initial update
     updateProgress()

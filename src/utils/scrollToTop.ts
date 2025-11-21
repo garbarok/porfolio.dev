@@ -1,33 +1,33 @@
 /**
  * Scroll to top functionality with UX best practices
- * - Shows button after scrolling down 400px
+ * - Shows button after scrolling down 300px
+ * - Hides button when within 100px of top
  * - Smooth scroll animation
  * - Respects reduced motion preferences
- * - Debounced scroll events for performance
+ * - Throttled scroll events for performance
  */
 
-const SCROLL_THRESHOLD = 400; // Show button after scrolling 400px
-const DEBOUNCE_DELAY = 100; // Debounce scroll events by 100ms
+const SCROLL_THRESHOLD_SHOW = 300; // Show button after scrolling 300px
+const SCROLL_THRESHOLD_HIDE = 100; // Hide button when within 100px of top
+const THROTTLE_DELAY = 50; // Throttle scroll events by 50ms (more responsive)
+
+// Store event handlers for proper cleanup
+let scrollHandler: (() => void) | null = null;
+let clickHandler: (() => void) | null = null;
+let keydownHandler: ((event: KeyboardEvent) => void) | null = null;
+let lastScrollTime = 0;
 
 /**
- * Debounce function to limit the rate of function execution
+ * Throttle function to limit the rate of function execution
  */
-function debounce<T extends (...args: any[]) => void>(
-  func: T,
-  wait: number
-): (...args: Parameters<T>) => void {
-  let timeout: ReturnType<typeof setTimeout> | null = null;
+function throttle(func: () => void, wait: number): () => void {
+  return function executedFunction() {
+    const now = Date.now();
 
-  return function executedFunction(...args: Parameters<T>) {
-    const later = () => {
-      timeout = null;
-      func(...args);
-    };
-
-    if (timeout) {
-      clearTimeout(timeout);
+    if (now - lastScrollTime >= wait) {
+      lastScrollTime = now;
+      func();
     }
-    timeout = setTimeout(later, wait);
   };
 }
 
@@ -39,10 +39,14 @@ function toggleScrollButton() {
   if (!scrollButton) return;
 
   const scrollPosition = window.scrollY || document.documentElement.scrollTop;
+  const isVisible = scrollButton.classList.contains('show');
 
-  if (scrollPosition > SCROLL_THRESHOLD) {
+  // Show button when scrolled past the show threshold
+  if (scrollPosition > SCROLL_THRESHOLD_SHOW && !isVisible) {
     scrollButton.classList.add('show');
-  } else {
+  }
+  // Hide button when scrolled back above the hide threshold
+  else if (scrollPosition < SCROLL_THRESHOLD_HIDE && isVisible) {
     scrollButton.classList.remove('show');
   }
 }
@@ -58,6 +62,7 @@ function scrollToTop() {
 
   window.scrollTo({
     top: 0,
+    left: 0,
     behavior: prefersReducedMotion ? 'auto' : 'smooth',
   });
 }
@@ -69,22 +74,27 @@ export function initScrollToTop() {
   const scrollButton = document.getElementById('scroll-to-top');
   if (!scrollButton) return;
 
-  // Create debounced scroll handler
-  const debouncedToggle = debounce(toggleScrollButton, DEBOUNCE_DELAY);
+  // Clean up any existing listeners first
+  cleanupScrollToTop();
 
-  // Add scroll event listener
-  window.addEventListener('scroll', debouncedToggle, { passive: true });
+  // Create throttled scroll handler
+  scrollHandler = throttle(toggleScrollButton, THROTTLE_DELAY);
 
-  // Add click event listener
-  scrollButton.addEventListener('click', scrollToTop);
+  // Create click handler
+  clickHandler = scrollToTop;
 
-  // Add keyboard support (Enter and Space)
-  scrollButton.addEventListener('keydown', (event) => {
+  // Create keyboard handler
+  keydownHandler = (event: KeyboardEvent) => {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
       scrollToTop();
     }
-  });
+  };
+
+  // Add event listeners
+  window.addEventListener('scroll', scrollHandler, { passive: true });
+  scrollButton.addEventListener('click', clickHandler);
+  scrollButton.addEventListener('keydown', keydownHandler);
 
   // Initial check
   toggleScrollButton();
@@ -95,9 +105,25 @@ export function initScrollToTop() {
  */
 export function cleanupScrollToTop() {
   const scrollButton = document.getElementById('scroll-to-top');
-  if (!scrollButton) return;
 
-  // Remove all event listeners by cloning and replacing the element
-  const newButton = scrollButton.cloneNode(true);
-  scrollButton.parentNode?.replaceChild(newButton, scrollButton);
+  // Remove event listeners if they exist
+  if (scrollHandler) {
+    window.removeEventListener('scroll', scrollHandler);
+    scrollHandler = null;
+  }
+
+  if (scrollButton) {
+    if (clickHandler) {
+      scrollButton.removeEventListener('click', clickHandler);
+      clickHandler = null;
+    }
+
+    if (keydownHandler) {
+      scrollButton.removeEventListener('keydown', keydownHandler);
+      keydownHandler = null;
+    }
+  }
+
+  // Reset last scroll time
+  lastScrollTime = 0;
 }

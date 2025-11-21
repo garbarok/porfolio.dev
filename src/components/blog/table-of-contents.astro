@@ -1,4 +1,8 @@
 ---
+import { getLangFromUrl, useTranslations } from '@/i18n/utils'
+
+
+
 export interface Heading {
   depth: number
   slug: string
@@ -11,15 +15,18 @@ interface Props {
 
 const { headings } = Astro.props
 
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+
 // Filter to only show H2 and H3 headings
 const tocHeadings = headings.filter((h) => h.depth <= 3)
 ---
 
 {
   tocHeadings.length > 0 && (
-    <nav class="toc-nav" aria-label="Tabla de contenidos">
+    <nav class="toc-nav" aria-label={t('blog.tableOfContents')}>
       <h2 class="text-sm font-semibold uppercase tracking-wide text-gray-900 dark:text-white">
-        En este artículo
+        {t('blog.inThisArticle')}
       </h2>
       <ul class="mt-4 space-y-2 border-l-2 border-gray-200 dark:border-gray-800">
         {tocHeadings.map((heading) => (
@@ -47,6 +54,8 @@ const tocHeadings = headings.filter((h) => h.depth <= 3)
 }
 
 <script>
+  import { trackTOCClick } from '@/utils/blog-analytics'
+
   // Highlight active section in TOC
   function highlightActiveHeading() {
     const tocLinks = document.querySelectorAll('[data-toc-link]')
@@ -58,6 +67,46 @@ const tocHeadings = headings.filter((h) => h.depth <= 3)
         return document.getElementById(id!)
       })
       .filter((heading): heading is HTMLElement => heading !== null)
+
+    // Get article context from meta tags
+    const getArticleContext = () => {
+      const metaTitle = document.querySelector('meta[property="og:title"]')?.getAttribute('content')
+      const metaUrl = document.querySelector('meta[property="og:url"]')?.getAttribute('content')
+
+      if (!metaTitle || !metaUrl) return null
+
+      const pathParts = window.location.pathname.split('/')
+      const slug = pathParts[pathParts.length - 1] || pathParts[pathParts.length - 2]
+      const language = pathParts.includes('en') ? 'en' : 'es'
+
+      return {
+        title: metaTitle.replace(' - Blog', ''),
+        slug: slug,
+        tags: [],
+        language: language as 'es' | 'en',
+        author: 'Óscar Gallego',
+        publishedDate: new Date().toISOString(),
+        readingTime: 5,
+      }
+    }
+
+    // Track TOC clicks
+    tocLinks.forEach((link) => {
+      link.addEventListener('click', () => {
+        const headingSlug = link.getAttribute('data-toc-link')
+        const headingText = link.textContent?.trim()
+        const depth = link.classList.contains('pl-4') ? 2 : 3
+
+        const articleContext = getArticleContext()
+        if (articleContext && headingSlug && headingText) {
+          trackTOCClick(articleContext, {
+            headingText,
+            headingSlug,
+            depth,
+          })
+        }
+      })
+    })
 
     function updateActiveLink() {
       let activeHeading: HTMLElement | null = null

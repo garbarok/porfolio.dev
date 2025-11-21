@@ -22,6 +22,9 @@ const { title, url, shareText, shareOnTwitter, shareOnLinkedIn } = Astro.props;
         rel="noopener noreferrer"
         class="rounded-lg bg-gray-100 p-2.5 text-gray-700 transition-colors hover:bg-blue-100 hover:text-blue-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-blue-900/30 dark:hover:text-blue-400"
         aria-label={shareOnTwitter}
+        data-share-button="twitter"
+        data-article-title={title}
+        data-article-url={url}
       >
         <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
           <path
@@ -35,6 +38,9 @@ const { title, url, shareText, shareOnTwitter, shareOnLinkedIn } = Astro.props;
         rel="noopener noreferrer"
         class="rounded-lg bg-gray-100 p-2.5 text-gray-700 transition-colors hover:bg-blue-100 hover:text-blue-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-blue-900/30 dark:hover:text-blue-400"
         aria-label={shareOnLinkedIn}
+        data-share-button="linkedin"
+        data-article-title={title}
+        data-article-url={url}
       >
         <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
           <path
@@ -45,3 +51,56 @@ const { title, url, shareText, shareOnTwitter, shareOnLinkedIn } = Astro.props;
     </div>
   </div>
 </div>
+
+<script>
+  import { trackShare } from '@/utils/blog-analytics'
+
+  function initShareTracking() {
+    const shareButtons = document.querySelectorAll('[data-share-button]')
+
+    // Get article context from meta tags
+    const getArticleContext = () => {
+      const metaTitle = document.querySelector('meta[property="og:title"]')?.getAttribute('content')
+      const metaUrl = document.querySelector('meta[property="og:url"]')?.getAttribute('content')
+
+      if (!metaTitle || !metaUrl) return null
+
+      const pathParts = window.location.pathname.split('/')
+      const slug = pathParts[pathParts.length - 1] || pathParts[pathParts.length - 2]
+      const language = pathParts.includes('en') ? 'en' : 'es'
+
+      return {
+        title: metaTitle.replace(' - Blog', ''),
+        slug: slug,
+        tags: [],
+        language: language as 'es' | 'en',
+        author: 'Óscar Gallego',
+        publishedDate: new Date().toISOString(),
+        readingTime: 5,
+      }
+    }
+
+    shareButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const platform = button.getAttribute('data-share-button') as 'twitter' | 'linkedin'
+        const articleTitle = button.getAttribute('data-article-title') || ''
+        const articleUrl = button.getAttribute('data-article-url') || ''
+
+        const articleContext = getArticleContext()
+        if (articleContext && platform) {
+          trackShare(articleContext, {
+            platform,
+            articleTitle,
+            articleUrl,
+          })
+        }
+      })
+    })
+  }
+
+  // Initialize on page load
+  document.addEventListener('DOMContentLoaded', initShareTracking)
+
+  // Reinitialize after view transitions
+  document.addEventListener('astro:page-load', initShareTracking)
+</script>

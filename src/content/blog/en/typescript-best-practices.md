@@ -1,6 +1,6 @@
 ---
-title: "TypeScript: Best Practices for Professional Projects"
-description: "Complete guide to TypeScript best practices for writing safer, more maintainable code."
+title: "TypeScript Best Practices: Cut 90% of Production Bugs"
+description: "A strict `tsconfig.json` and advanced types reduced our production bugs from 47 to 3. Learn the TypeScript best practices that lead to safer, self-documenting code. ★"
 pubDate: 2025-10-25
 author: "Óscar Gallego"
 tags: ["typescript", "javascript", "best practices"]
@@ -14,6 +14,17 @@ image:
 Two years ago, I inherited a project with 80,000 lines of pure JavaScript, which resulted in **47 production bugs in 3 months**. After migrating to TypeScript with a strict configuration, that number dropped to just **3 bugs in 6 months**.
 
 TypeScript isn't just "JavaScript with types." It's a powerful error prevention system that delivers value from day one.
+
+## What are the Best Practices for TypeScript?
+
+To write robust and safe TypeScript code, it's essential to follow a set of best practices. These focus on a strict configuration and advanced use of the type system to prevent errors before they happen.
+
+The key best practices for TypeScript are:
+- **Enable strict mode:** Enable all `strict` flags in your `tsconfig.json` for maximum safety.
+- **Use `noUncheckedIndexedAccess`:** Prevent `undefined` errors when accessing arrays and objects.
+- **Differentiate `type` and `interface`:** Use `type` for unions and complex types, and `interface` for objects and public APIs that can be extended.
+- **Master Utility Types:** Use `Awaited`, `Parameters`, `ReturnType`, `Extract`, and `Exclude` to manipulate types in an advanced way.
+- **Apply Type Narrowing:** Use type guards, discriminated unions, and the `asserts` keyword to refine types and guide the compiler.
 
 ## The Power of a Strict `tsconfig.json`
 
@@ -89,55 +100,29 @@ Without this flag, accessing an array index is always assumed to be safe, which 
 
 This single flag forced me to add proper checks and uncovered **23 potential bugs** in an existing project.
 
-## `type` vs. `interface`: The Definitive Guide
+## `type` vs. `interface`: Which Should You Use?
 
-This is a common point of confusion. Here’s a clear guide on when to use each.
+The choice between `type` and `interface` in TypeScript depends on the use case. The general rule is to use `interface` to define the shape of objects and for public APIs due to its ability to be extended, and use `type` for everything else, such as unions, primitives, or complex types.
 
-### When to Use `type`
+Here is a direct comparison to help you decide:
 
-Use `type` for defining primitives, unions, and complex shapes.
+| Feature               | `interface`                                     | `type`                                               |
+| --------------------- | ----------------------------------------------- | ---------------------------------------------------- |
+| **Ideal for**         | Object structures (OOP), public APIs            | Unions, primitives, complex types, functions         |
+| **Extending**         | Yes, with `extends` and declaration merging     | Not directly; achieved with intersections (`&`)      |
+| **Declaration Merging** | ✅ Supported (allows adding new fields)         | ❌ Not supported (throws a duplicate identifier error) |
+| **Unions & Primitives** | ❌ Cannot be used for `string \| number` or `string` | ✅ Supported (`type ID = string \| number;`)           |
+| **Tuples**            | ✅ Supported (with array syntax)                | ✅ Supported (`type Point = [number, number];`)        |
+| **Mapped Types**      | ❌ Cannot be used                               | ✅ Supported (`type Readonly<T> = ...`)              |
 
-- **Unions and Primitives:**
-  ```typescript
-  type Status = 'idle' | 'loading' | 'success' | 'error';
-  type ID = string | number;
-  ```
-- **Function Types:**
-  ```typescript
-  type ClickHandler = (event: MouseEvent) => void;
-  ```
-- **Complex Shapes (Intersections, Mapped Types):**
-  ```typescript
-  type APIResponse<T> = { data: T; status: number; } & { success: boolean; };
-  type ReadOnly<T> = { readonly [K in keyof T]: T[K]; };
-  ```
+### In Summary:
 
-### When to Use `interface`
-
-Use `interface` for defining object structures that are meant to be extended.
-
-- **Public Library APIs:** Declaration merging allows users to extend your interfaces.
-  ```typescript
-  // Your library code
-  export interface PluginConfig {
-    name: string;
-  }
-  // User's code
-  declare module 'my-lib' {
-    interface PluginConfig {
-      customOption?: boolean;
-    }
-  }
-  ```
-- **Object-Oriented Programming:** When using classes and inheritance.
-  ```typescript
-  interface Animal {
-    makeSound(): void;
-  }
-  class Dog implements Animal {
-    makeSound() { console.log('Woof!'); }
-  }
-  ```
+- **Use `interface` when:**
+  - Defining the "shape" of an object or class.
+  - You want users of your API to be able to extend the definition (e.g., plugins).
+- **Use `type` when:**
+  - You need to define unions, tuples, or function types.
+  - You need to create complex types using Mapped Types or conditionals.
 
 ## Advanced Utility Types You Should Master
 
