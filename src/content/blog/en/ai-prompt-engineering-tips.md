@@ -2,7 +2,7 @@
 title: "How to Improve AI Answers with One-Shot Prompting and Context Placement?"
 description: "Struggling with vague AI answers? Learn how one-shot prompting and smart context placement can force models to give you better, more accurate results. Get started now! ★"
 pubDate: 2025-11-21
-relatedSlug: "ai-prompt-engineering-tips"
+relatedSlug: "consejos-ingenieria-prompts-ai"
 image:
   url: "https://res.cloudinary.com/dl0qx4iof/image/upload/blog/ai-prompt-engineering-tips.png"
   alt: "AI prompt engineering concept - illustration of a person interacting with a large language model"

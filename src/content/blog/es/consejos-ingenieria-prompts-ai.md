@@ -5,7 +5,7 @@ pubDate: 2025-11-21
 image:
   url: "https://res.cloudinary.com/dl0qx4iof/image/upload/blog/ai-prompt-engineering-tips.png"
   alt: "AI prompt engineering concept - illustration of a person interacting with a large language model"
-relatedSlug: "consejos-ingenieria-prompts-ai"
+relatedSlug: "ai-prompt-engineering-tips"
 tags: ["ia", "prompt-engineering", "buenas-practicas"]
 ---
 
