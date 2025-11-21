@@ -10,7 +10,8 @@
     "astro": "astro",
     "check:images": "tsx scripts/check-cloudinary-images.ts",
     "blog:new": "tsx scripts/new-blog-post.ts",
-    "blog:validate": "tsx scripts/validate-blog-posts.ts"
+    "blog:validate": "tsx scripts/validate-blog-posts.ts",
+    "blog:upload": "tsx scripts/upload-to-cloudinary.ts"
   },
   "dependencies": {
     "@astrojs/check": "0.9.5",
@@ -38,6 +39,7 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
+    "cloudinary": "^2.8.0",
     "prettier": "3.6.2",
     "prettier-plugin-astro": "0.14.1",
     "prettier-plugin-tailwindcss": "^0.7.1",

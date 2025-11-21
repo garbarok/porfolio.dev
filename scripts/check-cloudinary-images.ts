@@ -9,16 +9,18 @@ const CLOUDINARY_BASE = 'https://res.cloudinary.com/dl0qx4iof/image/upload';
 
 // Blog images mapping (duplicated from cloudinary.ts for Node environment)
 const BLOG_IMAGES = {
+  'ai-prompt-engineering-tips': 'blog/ai-prompt-engineering-tips.png',
+  'astro-content-config-location': 'blog/astro-debugging.png',
+  'astro-ubicacion-content-config': 'blog/astro-debugging.png',
+  'consejos-ingenieria-prompts-ai': 'blog/ai-prompt-engineering-tips.png',
   'introduccion-astro-5': 'blog/astro-introduction.png',
   'introduction-astro-5': 'blog/astro-introduction.png',
-  'tailwind-css-4-novedades': 'blog/tailwind-css-4.png',
   'tailwind-css-4-news': 'blog/tailwind-css-4.png',
-  'typescript-mejores-practicas': 'blog/typescript-best-practices.png',
-  'typescript-best-practices': 'blog/typescript-best-practices.png',
-  'astro-ubicacion-content-config': 'blog/astro-debugging.png',
-  'astro-content-config-location': 'blog/astro-debugging.png',
+  'tailwind-css-4-novedades': 'blog/tailwind-css-4.png',
   'tests-localmente-fallan-vercel': 'blog/vercel-tests.png',
   'tests-pass-locally-fail-vercel': 'blog/vercel-tests.png',
+  'typescript-best-practices': 'blog/typescript-best-practices.png',
+  'typescript-mejores-practicas': 'blog/typescript-best-practices.png',
 } as const;
 
 async function checkImage(publicId: string): Promise<boolean> {

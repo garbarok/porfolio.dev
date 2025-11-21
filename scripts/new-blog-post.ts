@@ -86,8 +86,8 @@ async function addToCloudinaryMapping(
     try {
       let content = fs.readFileSync(filePath, "utf-8");
 
-      // Find the BLOG_IMAGES object
-      const regex = /(export const BLOG_IMAGES = \{)([\s\S]*?)(\} as const;)/;
+      // Find the BLOG_IMAGES object (with or without 'export')
+      const regex = /((?:export )?const BLOG_IMAGES = \{)([\s\S]*?)(\} as const;?)/;
       const match = content.match(regex);
 
       if (!match) {
