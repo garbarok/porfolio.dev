@@ -22,7 +22,11 @@ export default defineConfig({
 
   integrations: [
     robotsTxt(),
-    sentry(),
+    sentry({
+      sourcemaps: {
+        disable: true,
+      },
+    }),
     sitemap({
       i18n: {
         defaultLocale: "es",

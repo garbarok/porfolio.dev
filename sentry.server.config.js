@@ -3,6 +3,8 @@ import * as Sentry from "@sentry/astro";
 Sentry.init({
   dsn: "https://8d5febdabfbf849e39741670777deaa7@o4510393330434048.ingest.de.sentry.io/4510404401102928",
 
+  telemetry: false,
+
   // Adds request headers and IP for users, for more info visit:
   // https://docs.sentry.io/platforms/javascript/guides/astro/configuration/options/#sendDefaultPii
   sendDefaultPii: true,
