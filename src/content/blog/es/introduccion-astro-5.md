@@ -7,6 +7,7 @@ tags: ["astro", "web development", "javascript"]
 image:
   url: "https://res.cloudinary.com/dl0qx4iof/image/upload/blog/astro-introduction.png"
   alt: "Astro 5 framework - rocket illustration with zero JavaScript concept"
+relatedSlug: "introduccion-astro-5"
 ---
 
 ## ¿Qué es Astro y Cuáles son sus Novedades en la Versión 5?
