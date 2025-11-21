@@ -23,9 +23,9 @@ export default defineConfig({
   integrations: [
     robotsTxt(),
     sentry({
-      sourcemaps: {
-        disable: true,
-      },
+      project: "porfolio-blog",
+      org: "oscar-gallego",
+      authToken: process.env.SENTRY_AUTH_TOKEN,
     }),
     sitemap({
       i18n: {
