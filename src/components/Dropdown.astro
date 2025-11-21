@@ -1,0 +1,127 @@
+---
+interface Props {
+  buttonText?: string;
+  buttonClass?: string;
+  menuClass?: string;
+  position?: 'bottom-start' | 'bottom-end' | 'top-start' | 'top-end';
+  id?: string;
+}
+
+const {
+  buttonText = 'Options',
+  buttonClass = '',
+  menuClass = '',
+  position = 'bottom-end',
+  id = `dropdown-${Math.random().toString(36).substring(2, 9)}`
+} = Astro.props;
+
+const positionClasses = {
+  'bottom-start': 'top-full left-0 mt-2',
+  'bottom-end': 'top-full right-0 mt-2',
+  'top-start': 'bottom-full left-0 mb-2',
+  'top-end': 'bottom-full right-0 mb-2',
+};
+---
+
+<div class="relative inline-block" data-dropdown-container>
+  <button
+    id={`${id}-button`}
+    type="button"
+    class:list={[
+      'inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white/10 px-3 py-2 text-sm font-semibold text-white inset-ring-1 inset-ring-white/5 hover:bg-white/20 focus:outline-2 focus:-outline-offset-1 focus:outline-indigo-500 transition',
+      buttonClass
+    ]}
+    aria-expanded="false"
+    aria-haspopup="true"
+    data-dropdown-button
+  >
+    <slot name="button">
+      {buttonText}
+      <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="-mr-1 size-5 text-gray-400 transition-transform" data-dropdown-icon>
+        <path d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
+      </svg>
+    </slot>
+  </button>
+
+  <div
+    id={`${id}-menu`}
+    class:list={[
+      'absolute hidden w-56 origin-top rounded-md bg-gray-800 outline-1 -outline-offset-1 outline-white/10 z-50',
+      positionClasses[position],
+      menuClass
+    ]}
+    role="menu"
+    aria-orientation="vertical"
+    tabindex="-1"
+    data-dropdown-menu
+  >
+    <div class="py-1">
+      <slot name="menu">
+        <a href="#" role="menuitem" tabindex="-1" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white focus:bg-white/5 focus:text-white focus:outline-hidden transition">
+          Account settings
+        </a>
+        <a href="#" role="menuitem" tabindex="-1" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white focus:bg-white/5 focus:text-white focus:outline-hidden transition">
+          Support
+        </a>
+        <a href="#" role="menuitem" tabindex="-1" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white focus:bg-white/5 focus:text-white focus:outline-hidden transition">
+          License
+        </a>
+        <form action="#" method="POST">
+          <button type="submit" role="menuitem" tabindex="-1" class="block w-full px-4 py-2 text-left text-sm text-gray-300 hover:bg-white/5 hover:text-white focus:bg-white/5 focus:text-white focus:outline-hidden transition">
+            Sign out
+          </button>
+        </form>
+      </slot>
+    </div>
+  </div>
+</div>
+
+<style>
+  [data-dropdown-menu].open {
+    display: block;
+    animation: dropdown-scale-in 0.1s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  }
+
+  [data-dropdown-menu].closing {
+    animation: dropdown-scale-out 0.075s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  }
+
+  [data-dropdown-icon].open {
+    transform: rotate(180deg);
+  }
+
+  @keyframes dropdown-scale-in {
+    from {
+      transform: scale(0.95);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  @keyframes dropdown-scale-out {
+    from {
+      transform: scale(1);
+      opacity: 1;
+    }
+    to {
+      transform: scale(0.95);
+      opacity: 0;
+    }
+  }
+</style>
+
+<script>
+  import { createDropdownManager } from '@/utils/dropdown';
+
+  document.addEventListener('astro:page-load', () => {
+    // Initialize all dropdowns on the page
+    const dropdowns = document.querySelectorAll('[data-dropdown-container]');
+
+    dropdowns.forEach((container) => {
+      createDropdownManager(container as HTMLElement);
+    });
+  });
+</script>

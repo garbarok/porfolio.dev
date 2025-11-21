@@ -6,6 +6,7 @@ import { ClientRouter } from 'astro:transitions'
 import Footer from '../components/Footer.astro'
 import Header from '../components/Header.astro'
 import GoogleAnalytics from '../components/GoogleAnalytics.astro'
+import ScrollToTop from '../components/ScrollToTop.astro'
 import '../styles/global.css'
 import { getLangFromUrl } from '../i18n/utils'
 
@@ -243,6 +244,7 @@ const socialImage = new URL(image, SITE_URL).href
     <slot />
 
     <Footer />
+    <ScrollToTop />
     <script>
       import '../scripts/botid'
     </script>

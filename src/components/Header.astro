@@ -37,192 +37,140 @@ const currentPath = Astro.url.pathname;
 ---
 
 <header
-  class="fixed top-0 z-50 mx-auto mt-2 flex w-full items-center justify-center"
+  class="fixed top-0 z-50 w-full"
 >
-  <!-- Desktop Navigation -->
-  <nav
-    class="hidden md:flex items-center justify-center gap-x-2 rounded-full px-3 py-2 text-sm font-medium text-white shadow-lg backdrop-blur-md"
-  >
-    {
-      navItems.map((link) => (
-        <a
-          class:list={[
-            "relative block whitespace-nowrap px-3 py-2 transition hover:text-blue-500",
-            { "text-blue-500": currentPath === link.url || (currentPath.startsWith(link.url) && link.url !== "/") }
-          ]}
-          aria-label={link.label}
-          href={link.url}
-        >
-          {link.title}
-        </a>
-      ))
-    }
-    <div class="border-l border-gray-600 h-6 mx-1"></div>
-    <LanguageSwitcher />
-  </nav>
+  <nav class="relative bg-gray-800/50 after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-white/10">
+    <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+      <div class="relative flex h-16 items-center justify-between">
+        <!-- Mobile menu button -->
+        <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
+          <button
+            id="mobile-menu-button"
+            type="button"
+            class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-white/5 hover:text-white focus:outline-2 focus:-outline-offset-1 focus:outline-indigo-500"
+            aria-label="Toggle menu"
+            aria-expanded="false"
+          >
+            <span class="absolute -inset-0.5"></span>
+            <span class="sr-only">Open main menu</span>
+            <svg id="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6">
+              <path d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <svg id="close-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6 hidden">
+              <path d="M6 18 18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+        </div>
 
-  <!-- Mobile Navigation -->
-  <div class="md:hidden">
-    <!-- Hamburger Button -->
-    <button
-      id="mobile-menu-button"
-      class="relative z-50 flex items-center justify-center rounded-full bg-gray-900 p-3 text-white shadow-lg backdrop-blur-md hover:bg-gray-800 transition"
-      aria-label="Toggle menu"
-      aria-expanded="false"
-    >
-      <svg id="menu-icon" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-      </svg>
-      <svg id="close-icon" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-      </svg>
-    </button>
+        <!-- Centered nav items -->
+        <div class="flex flex-1 items-center justify-center">
+          <div class="hidden sm:block">
+            <div class="flex items-center space-x-4">
+              {
+                navItems.map((link) => (
+                  <a
+                    href={link.url}
+                    aria-label={link.label}
+                    class:list={[
+                      "rounded-md px-3 py-2 text-sm font-medium transition",
+                      {
+                        "bg-gray-950/50 text-white": currentPath === link.url || (currentPath.startsWith(link.url) && link.url !== "/"),
+                        "text-gray-300 hover:bg-white/5 hover:text-white": !(currentPath === link.url || (currentPath.startsWith(link.url) && link.url !== "/"))
+                      }
+                    ]}
+                  >
+                    {link.title}
+                  </a>
+                ))
+              }
+              <div class="border-l border-gray-600 h-6 mx-2"></div>
+              <LanguageSwitcher />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    <!-- Mobile Menu Overlay -->
-    <div
-      id="mobile-menu"
-      class="fixed inset-0 z-40 bg-gray-900/95 backdrop-blur-lg hidden"
-    >
-      <nav class="flex flex-col items-center gap-6 p-8 pt-20">
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="hidden sm:hidden">
+      <div class="space-y-1 px-2 pt-2 pb-3">
         {
           navItems.map((link) => (
             <a
-              class:list={[
-                "text-2xl font-medium text-white transition hover:text-blue-500 py-3 px-6 min-h-[48px] flex items-center",
-                { "text-blue-500": currentPath === link.url || (currentPath.startsWith(link.url) && link.url !== "/") }
-              ]}
-              aria-label={link.label}
               href={link.url}
+              aria-label={link.label}
+              class:list={[
+                "block rounded-md px-3 py-2 text-base font-medium transition",
+                {
+                  "bg-gray-950/50 text-white": currentPath === link.url || (currentPath.startsWith(link.url) && link.url !== "/"),
+                  "text-gray-300 hover:bg-white/5 hover:text-white": !(currentPath === link.url || (currentPath.startsWith(link.url) && link.url !== "/"))
+                }
+              ]}
             >
               {link.title}
             </a>
           ))
         }
-        <div class="border-t border-gray-600 w-32 my-2"></div>
-        <div class="text-2xl">
+        <div class="border-t border-gray-600 my-2"></div>
+        <div class="px-3 py-2">
           <LanguageSwitcher />
         </div>
-      </nav>
+      </div>
     </div>
-  </div>
+  </nav>
 </header>
 
 <script>
+  import { createMobileMenuManager } from "@/utils/mobileMenu";
+  import {
+    createSectionHighlighter,
+    isHomePage,
+  } from "@/utils/sectionHighlight";
+
   document.addEventListener("astro:page-load", () => {
-    // Mobile menu toggle
-    const mobileMenuButton = document.getElementById("mobile-menu-button");
-    const mobileMenu = document.getElementById("mobile-menu");
-    const menuIcon = document.getElementById("menu-icon");
-    const closeIcon = document.getElementById("close-icon");
-    const mobileMenuLinks = document.querySelectorAll("#mobile-menu a");
+    // Initialize mobile menu
+    createMobileMenuManager();
 
-    if (mobileMenuButton && mobileMenu && menuIcon && closeIcon) {
-      const toggleMenu = () => {
-        const isHidden = mobileMenu.classList.contains("hidden");
-        mobileMenu.classList.toggle("hidden");
-        menuIcon.classList.toggle("hidden");
-        closeIcon.classList.toggle("hidden");
-        mobileMenuButton.setAttribute("aria-expanded", isHidden ? "true" : "false");
-        
-        // Prevent body scroll when menu is open
-        document.body.style.overflow = isHidden ? "hidden" : "";
-      };
+    // Initialize section highlighting only on home pages
+    if (isHomePage(window.location.pathname)) {
+      const sections = document.querySelectorAll("section");
+      const navItems = document.querySelectorAll("header nav a");
 
-      mobileMenuButton.addEventListener("click", toggleMenu);
-
-      // Close menu when clicking on a link
-      mobileMenuLinks.forEach((link) => {
-        link.addEventListener("click", () => {
-          mobileMenu.classList.add("hidden");
-          menuIcon.classList.remove("hidden");
-          closeIcon.classList.add("hidden");
-          mobileMenuButton.setAttribute("aria-expanded", "false");
-          document.body.style.overflow = "";
-        });
-      });
-
-      // Close menu when clicking outside
-      mobileMenu.addEventListener("click", (e) => {
-        if (e.target === mobileMenu) {
-          toggleMenu();
-        }
-      });
+      if (sections.length > 0 && navItems.length > 0) {
+        // Exclude sections that are separate pages (not homepage sections)
+        createSectionHighlighter(
+          {
+            sections,
+            navItems,
+            headerOffset: 400,
+            bottomOffset: 100,
+          },
+          undefined,
+          ["blog", "contacto", "contact"]
+        );
+      }
     }
-
-    // Desktop navigation - section highlighting
-    const sections = document.querySelectorAll("section");
-    const navItems = document.querySelectorAll("header nav a");
-    const isHomePage = window.location.pathname === "/";
-
-    if (!isHomePage) return;
-
-    const getDistanceFromTop = (element: Element) => {
-      return Math.abs(element.getBoundingClientRect().top);
-    };
-
-    const findClosestSectionToTop = (entries: IntersectionObserverEntry[]) => {
-      const visibleSections = entries.filter(entry => entry.isIntersecting);
-
-      if (visibleSections.length === 0) return null;
-
-      return visibleSections.reduce((closest, current) => {
-        const closestDistance = getDistanceFromTop(closest.target);
-        const currentDistance = getDistanceFromTop(current.target);
-        return currentDistance < closestDistance ? current : closest;
-      });
-    };
-
-    const updateActiveNavItem = (sectionId: string) => {
-      navItems.forEach((item) => {
-        const isActive = item.getAttribute("aria-label") === sectionId;
-        item.classList.toggle("text-blue-500", isActive);
-      });
-    };
-
-    const handleIntersection = (entries: IntersectionObserverEntry[]) => {
-      const closestSection = findClosestSectionToTop(entries);
-      if (closestSection) {
-        updateActiveNavItem(closestSection.target.id);
-      }
-    };
-
-    const observer = new IntersectionObserver(handleIntersection, {
-      root: null,
-      rootMargin: "-20% 0px -35% 0px",
-      threshold: [0, 0.25, 0.5, 0.75, 1.0],
-    });
-
-    sections.forEach((section) => observer.observe(section));
-
-    document.onvisibilitychange = () => {
-      if (document.visibilityState === "hidden") {
-        observer.disconnect();
-      } else {
-        sections.forEach((section) => observer.observe(section));
-      }
-    };
   });
 </script>
 
 <style>
   nav {
-    animation: nav-shadown 1s linear both;
+    animation: nav-shadow 1s linear both;
     animation-timeline: scroll();
     animation-range: 0 100px;
-    background-color: rgb(17 24 39);
+    backdrop-filter: blur(12px);
   }
 
-  @keyframes nav-shadown {
+  @keyframes nav-shadow {
     0% {
-      background-color: rgb(17 24 39);
-      box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+      background-color: rgb(31 41 55 / 0.5);
+      box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.1);
     }
     to {
-      background-color: rgb(17 24 39);
+      background-color: rgb(31 41 55 / 0.8);
       box-shadow:
         0 10px 15px -3px rgb(0 0 0 / 0.5),
         0 4px 6px -4px rgb(0 0 0 / 0.5);
-      backdrop-filter: blur(12px);
     }
   }
 </style>

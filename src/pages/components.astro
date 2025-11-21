@@ -1,5 +1,6 @@
 ---
 import Badge from "@components/Badge.astro";
+import Dropdown from "@components/Dropdown.astro";
 import SectionContainer from "@components/SectionContainer.astro";
 import SocialPill from "@components/SocialPill.astro";
 import LinkedInIcon from "@components/icons/LinkedIn.astro";
@@ -26,6 +27,44 @@ import Layout from "@layouts/Layout.astro";
           <LinkedInIcon class="size-4 md:size-6" />
           LinkedIn
         </SocialPill>
+      </div>
+    </article>
+
+    <article class="mb-10">
+      <h1 class="mb-4 text-xl font-semibold">&lt;Dropdown /&gt;</h1>
+
+      <div class="flex gap-4 flex-wrap">
+        <!-- Default dropdown -->
+        <Dropdown buttonText="Options" />
+
+        <!-- Custom menu dropdown -->
+        <Dropdown buttonText="Actions" position="bottom-start">
+          <span slot="menu">
+            <a href="#edit" role="menuitem" tabindex="-1" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white focus:bg-white/5 focus:text-white focus:outline-hidden transition">
+              Edit
+            </a>
+            <a href="#duplicate" role="menuitem" tabindex="-1" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white focus:bg-white/5 focus:text-white focus:outline-hidden transition">
+              Duplicate
+            </a>
+            <hr class="my-1 border-gray-700" />
+            <a href="#delete" role="menuitem" tabindex="-1" class="block px-4 py-2 text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 focus:bg-red-500/10 focus:text-red-300 focus:outline-hidden transition">
+              Delete
+            </a>
+          </span>
+        </Dropdown>
+
+        <!-- Custom button dropdown -->
+        <Dropdown>
+          <span slot="button" class="flex items-center gap-2">
+            <span class="size-6 rounded-full bg-indigo-500 flex items-center justify-center text-xs font-bold">
+              OG
+            </span>
+            <span>Profile</span>
+            <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="-mr-1 size-5 text-gray-400 transition-transform" data-dropdown-icon>
+              <path d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
+            </svg>
+          </span>
+        </Dropdown>
       </div>
     </article>
   </SectionContainer>
