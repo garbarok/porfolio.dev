@@ -60,5 +60,6 @@ export default defineConfig({
 
   vite: {
     plugins: [tailwindcss()],
+    sourcemap: true,
   },
 });

@@ -28,15 +28,6 @@ const t = useTranslations(lang)
     <SectionContainer class="py-16 md:py-36">
       <Hero />
     </SectionContainer>
-    <button id="error-button">Throw test error</button>
-    <script>
-      function handleClick() {
-        throw new Error('This is a test error')
-      }
-      document
-        ?.querySelector('#error-button')
-        ?.addEventListener('click', handleClick)
-    </script>
   </main>
   <div class="space-y-24">
     <SectionContainer id="experiencia">

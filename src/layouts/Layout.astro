@@ -1,47 +1,53 @@
 ---
-import '@fontsource-variable/onest'
+import "@fontsource-variable/onest";
 
-import Analytics from '@vercel/analytics/astro'
-import { ClientRouter } from 'astro:transitions'
-import Footer from '../components/Footer.astro'
-import Header from '../components/Header.astro'
-import GoogleAnalytics from '../components/GoogleAnalytics.astro'
-import ScrollToTop from '../components/ScrollToTop.astro'
-import '../styles/global.css'
-import { getLangFromUrl } from '../i18n/utils'
+import Analytics from "@vercel/analytics/astro";
+import { ClientRouter } from "astro:transitions";
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+import GoogleAnalytics from "../components/GoogleAnalytics.astro";
+import ScrollToTop from "../components/ScrollToTop.astro";
+import "../styles/global.css";
+import { getLangFromUrl } from "../i18n/utils";
 
 interface Props {
-  title: string
-  description: string
-  image?: string
-  type?: 'website' | 'article' | 'profile'
-  canonicalURL?: string
-  publishedTime?: string
-  modifiedTime?: string
-  lang?: 'es' | 'en'
+  title: string;
+  description: string;
+  image?: string;
+  type?: "website" | "article" | "profile";
+  canonicalURL?: string;
+  publishedTime?: string;
+  modifiedTime?: string;
+  lang?: "es" | "en";
+  section?: string;
+  imageAlt?: string;
+  dateCreated?: string;
 }
 
-const lang = getLangFromUrl(Astro.url)
+// Site configuration
+const SITE_URL = "https://oscargallegoruiz.com";
+const SITE_NAME = "Óscar Gallego - Ingeniero de Software";
+const AUTHOR_NAME = "Óscar Gallego";
+const TWITTER_HANDLE = "@garbarok";
+const THEME_COLOR = "#8b5cf6"; // Matches the purple gradient in your design
+
+const lang = getLangFromUrl(Astro.url);
 
 const {
   description,
   title,
-  image = '/og-image.jpg',
-  type = 'website',
+  image = "/og-image.jpg",
+  type = "website",
   canonicalURL = new URL(Astro.url.pathname, Astro.site).href,
   publishedTime,
   modifiedTime,
-} = Astro.props
-
-// Site configuration
-const SITE_URL = 'https://oscargallegoruiz.com'
-const SITE_NAME = 'Óscar Gallego - Ingeniero de Software'
-const AUTHOR_NAME = 'Óscar Gallego'
-const TWITTER_HANDLE = '@garbarok'
-const THEME_COLOR = '#8b5cf6' // Matches the purple gradient in your design
+  section = "Technology",
+  imageAlt = `${AUTHOR_NAME} - Portfolio Preview`,
+  dateCreated = "2024-01-01T00:00:00Z",
+} = Astro.props;
 
 // Build full image URL for social sharing
-const socialImage = new URL(image, SITE_URL).href
+const socialImage = new URL(image, SITE_URL).href;
 ---
 
 <!doctype html>
@@ -71,11 +77,12 @@ const socialImage = new URL(image, SITE_URL).href
     {
       (() => {
         // Get the current path without language prefix
-        const currentPath = Astro.url.pathname.replace(/^\/(es|en)/, '') || '/'
+        const currentPath = Astro.url.pathname.replace(/^\/(es|en)/, "") || "/";
 
         // Generate hreflang URLs
-        const esUrl = new URL(currentPath === '/' ? '/' : currentPath, SITE_URL).href
-        const enUrl = new URL(`/en${currentPath}`, SITE_URL).href
+        const esUrl = new URL(currentPath === "/" ? "/" : currentPath, SITE_URL)
+          .href;
+        const enUrl = new URL(`/en${currentPath}`, SITE_URL).href;
 
         return (
           <>
@@ -83,7 +90,7 @@ const socialImage = new URL(image, SITE_URL).href
             <link rel="alternate" hreflang="en" href={enUrl} />
             <link rel="alternate" hreflang="x-default" href={esUrl} />
           </>
-        )
+        );
       })()
     }
 
@@ -95,12 +102,9 @@ const socialImage = new URL(image, SITE_URL).href
     <meta property="og:image" content={socialImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta
-      property="og:image:alt"
-      content={`${AUTHOR_NAME} - Portfolio Preview`}
-    />
+    <meta property="og:image:alt" content={imageAlt} />
     <meta property="og:site_name" content={SITE_NAME} />
-    <meta property="og:locale" content={lang === 'es' ? 'es_ES' : 'en_US'} />
+    <meta property="og:locale" content={lang === "es" ? "es_ES" : "en_US"} />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -108,29 +112,26 @@ const socialImage = new URL(image, SITE_URL).href
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={socialImage} />
-    <meta
-      name="twitter:image:alt"
-      content={`${AUTHOR_NAME} - Portfolio Preview`}
-    />
+    <meta name="twitter:image:alt" content={imageAlt} />
     <meta name="twitter:creator" content={TWITTER_HANDLE} />
     <meta name="twitter:site" content={TWITTER_HANDLE} />
 
     <!-- Article specific meta tags -->
     {
-      type === 'article' && publishedTime && (
+      type === "article" && publishedTime && (
         <meta property="article:published_time" content={publishedTime} />
       )
     }
     {
-      type === 'article' && modifiedTime && (
+      type === "article" && modifiedTime && (
         <meta property="article:modified_time" content={modifiedTime} />
       )
     }
     {
-      type === 'article' && (
+      type === "article" && (
         <>
           <meta property="article:author" content={AUTHOR_NAME} />
-          <meta property="article:section" content="Technology" />
+          <meta property="article:section" content={section || "Technology"} />
         </>
       )
     }
@@ -158,41 +159,41 @@ const socialImage = new URL(image, SITE_URL).href
       is:inline
       type="application/ld+json"
       set:html={JSON.stringify({
-        '@context': 'https://schema.org',
-        '@type': 'Person',
+        "@context": "https://schema.org",
+        "@type": "Person",
         name: AUTHOR_NAME,
         url: SITE_URL,
         image: socialImage,
-        jobTitle: 'Ingeniero de Software',
+        jobTitle: "Ingeniero de Software",
         description: description,
         worksFor: {
-          '@type': 'Organization',
-          name: 'Rindus (Stibo DX)',
+          "@type": "Organization",
+          name: "Rindus (Stibo DX)",
         },
         alumniOf: {
-          '@type': 'Organization',
-          name: 'Universidad de Málaga',
+          "@type": "Organization",
+          name: "Universidad de Málaga",
         },
         knowsAbout: [
-          'Angular',
-          'NestJS',
-          'PostgreSQL',
-          'Next.js',
-          'React',
-          'TypeScript',
-          'Node.js',
-          'Astro',
-          'Prisma ORM',
-          'API REST',
-          'Arquitectura de Software',
-          'Frontend Development',
-          'Backend Development',
-          'Fullstack Development',
+          "Angular",
+          "NestJS",
+          "PostgreSQL",
+          "Next.js",
+          "React",
+          "TypeScript",
+          "Node.js",
+          "Astro",
+          "Prisma ORM",
+          "API REST",
+          "Arquitectura de Software",
+          "Frontend Development",
+          "Backend Development",
+          "Fullstack Development",
         ],
         sameAs: [
-          'https://github.com/garbarok',
-          'https://linkedin.com/in/oscargallegoruiz',
-          'https://twitter.com/garbarok',
+          "https://github.com/garbarok",
+          "https://linkedin.com/in/oscargallegoruiz",
+          "https://twitter.com/garbarok",
         ],
       })}
     />
@@ -201,14 +202,14 @@ const socialImage = new URL(image, SITE_URL).href
       is:inline
       type="application/ld+json"
       set:html={JSON.stringify({
-        '@context': 'https://schema.org',
-        '@type': 'WebSite',
+        "@context": "https://schema.org",
+        "@type": "WebSite",
         name: SITE_NAME,
         url: SITE_URL,
         description: description,
-        inLanguage: lang === 'es' ? 'es-ES' : 'en-US',
+        inLanguage: lang === "es" ? "es-ES" : "en-US",
         author: {
-          '@type': 'Person',
+          "@type": "Person",
           name: AUTHOR_NAME,
         },
       })}
@@ -218,15 +219,15 @@ const socialImage = new URL(image, SITE_URL).href
       is:inline
       type="application/ld+json"
       set:html={JSON.stringify({
-        '@context': 'https://schema.org',
-        '@type': 'ProfilePage',
-        dateCreated: '2024-01-01T00:00:00Z',
+        "@context": "https://schema.org",
+        "@type": "ProfilePage",
+        dateCreated: dateCreated,
         dateModified: new Date().toISOString(),
         mainEntity: {
-          '@type': 'Person',
+          "@type": "Person",
           name: AUTHOR_NAME,
           description: description,
-          jobTitle: 'Ingeniero de Software',
+          jobTitle: "Ingeniero de Software",
           url: SITE_URL,
         },
       })}
@@ -246,7 +247,7 @@ const socialImage = new URL(image, SITE_URL).href
     <Footer />
     <ScrollToTop />
     <script>
-      import '../scripts/botid'
+      import "../scripts/botid";
     </script>
     <style is:global>
       :root {
@@ -254,7 +255,7 @@ const socialImage = new URL(image, SITE_URL).href
       }
 
       html {
-        font-family: 'Onest Variable', system-ui, sans-serif;
+        font-family: "Onest Variable", system-ui, sans-serif;
         scroll-behavior: smooth;
       }
 
