@@ -1,6 +1,6 @@
 ---
-title: "Astro Content Collections: Por qué desaparecen tus campos del schema"
-description: "Guía de depuración: Cómo la ubicación incorrecta del archivo de configuración de contenido causa que los campos del schema desaparezcan en proyectos Astro 5."
+title: "Astro Content Collections: Por qué Desaparecen tus Campos del Schema"
+description: "Una odisea de depuración: Cómo una ubicación incorrecta del archivo de configuración de contenido puede hacer desaparecer tus campos de schema en Astro y cómo solucionarlo."
 pubDate: 2025-11-18
 author: "Óscar Gallego"
 tags: ["astro", "debugging", "content collections", "typescript"]
@@ -8,266 +8,131 @@ draft: false
 relatedSlug: "astro-content-config-location"
 image:
   url: "https://res.cloudinary.com/dl0qx4iof/image/upload/blog/astro-debugging.png"
-  alt: "Debugging Astro - developer solving configuration issues"
+  alt: "Un desarrollador depurando archivos de configuración de Astro en una pantalla de ordenador."
 ---
 
-## El misterio de los campos del schema que desaparecen
+¿Alguna vez has definido un campo en tu schema de Astro Content Collections solo para que se desvanezca en tiempo de ejecución? No estás solo. Recientemente pasé horas depurando un problema en el que los campos de mi schema desaparecían inexplicablemente, a pesar de estar definidos correctamente.
 
-Mientras implementaba soporte multiidioma para mi blog, me encontré con un problema frustrante: **los campos personalizados del schema desaparecían de mis colecciones de contenido** a pesar de estar claramente definidos en el schema y presentes en el frontmatter.
+> **TL;DR: El Problema y la Solución**
+> **Problema:** Mis nuevos campos de schema desaparecían porque estaba editando `src/content/config.ts`.
+> **Solución:** Astro solo reconoce `src/content.config.ts`. Tuve que mover mis cambios al archivo con el nombre y la ubicación correctos y eliminar el duplicado.
 
-### Los síntomas
+Este artículo te guía a través del proceso de depuración, la causa raíz y cómo puedes evitar este error común.
 
-Esto es lo que estaba experimentando:
+## El Misterio de los Campos del Schema que Desaparecen
+
+Mientras añadía un campo `relatedSlug` al schema de mi blog para soporte multiidioma, me topé con un muro. El campo estaba definido en el schema y presente en el frontmatter del Markdown, pero estaba completamente ausente en el objeto `post.data`.
+
+### Los Síntomas
+
+Mi configuración parecía correcta, pero el campo `relatedSlug` no aparecía por ningún lado en los tipos de TypeScript ni en tiempo de ejecución.
 
 ```typescript
 // src/content/config.ts
-const blog = defineCollection({
-  loader: glob({
-    pattern: "**/*.{md,mdx}",
-    base: "./src/content/blog"
-  }),
+import { z, defineCollection } from "astro:content";
+
+const blogCollection = defineCollection({
   schema: z.object({
     title: z.string(),
-    description: z.string(),
     // ... otros campos
-    translation: z.string().optional(), // ❌ ¡Este campo desaparecía!
+    relatedSlug: z.string().optional(), // ❌ ¡Este campo desaparecía!
   }),
 });
+
+export const collections = { blog: blogCollection };
 ```
 
-**El problema:**
-- ✅ Campo definido en el schema: `translation: z.string().optional()`
-- ✅ Campo presente en el frontmatter: `translation: "version-espanola"`
-- ❌ Campo ausente en los tipos de TypeScript
-- ❌ Campo ausente en runtime: `'translation' in post.data` retornaba `false`
+- ✅ **Definido en el Schema:** El campo `relatedSlug` era claramente parte del schema de Zod.
+- ✅ **Presente en el Frontmatter:** Mis archivos `.md` incluían `relatedSlug: "un-slug-cualquiera"`.
+- ❌ **Ausente en Runtime:** `'relatedSlug' in post.data` devolvía `false`.
 
-### La investigación
+### La Investigación: Qué no Funcionó
 
-Inicialmente pensé que era un bug de Astro 5.16.0 donde los campos opcionales se eliminaban. Probé múltiples enfoques:
+Sospeché de un bug en Astro o Zod, así que probé varias soluciones alternativas, ninguna de las cuales resolvió el problema:
 
-**Intento 1: Usar `.default()` en lugar de `.optional()`**
+1.  **Usar `.default()`:** Reemplacé `.optional()` por `.default("")`, esperando forzar la existencia del campo. El campo seguía ausente.
+2.  **Hacerlo Requerido:** Eliminé `.optional()`, haciendo el campo obligatorio. Astro debería haber lanzado un error por campos faltantes, pero no lo hizo. El campo seguía sin aparecer.
+3.  **Cambiar el Nombre del Campo:** Renombré `relatedSlug` a `translation` para descartar un conflicto de nombres. El nuevo campo también desapareció.
+
+El hecho de que incluso los **campos requeridos** fueran ignorados fue una pista importante de que algo estaba fundamentalmente mal en cómo Astro leía mi configuración.
+
+## La Causa Raíz: Un Simple Error de Ubicación
+
+Después de horas de depuración, la respuesta fue vergonzosamente simple: **estaba editando el archivo equivocado.**
+
+Según la documentación de Astro, el archivo de configuración de las colecciones de contenido tiene requisitos estrictos de nombre y ubicación.
+
+- **Archivo Correcto:** `src/content.config.ts`
+- **Mi Archivo:** `src/content/config.ts`
+
+> Había creado accidentalmente un archivo de configuración dentro del directorio `content`. Astro estaba ignorando por completo este archivo y leyendo una versión más antigua de `content.config.ts` ubicada en la raíz de `src`.
+
+Esta sutil diferencia era la fuente de todos mis problemas.
+
+## La Solución: Un Arreglo en 4 Pasos
+
+Solucionar el problema fue sencillo una vez que identifiqué la causa raíz.
+
+### Paso 1: Localiza el Archivo de Configuración Correcto
+
+Primero, tuve que confirmar qué archivo estaba usando Astro realmente. Los tipos generados en `.astro/` dan la respuesta.
+
 ```typescript
-translation: z.string().default("") // ❌ ¡Seguía desapareciendo!
+// .astro/content.d.ts
+// Esta línea revela la fuente de la verdad:
+export type ContentConfig = typeof import("../src/content.config.js");
 ```
 
-**Intento 2: Hacerlo requerido**
-```typescript
-translation: z.string() // ❌ ¡Seguía desapareciendo!
-```
+### Paso 2: Consolida y Elimina
 
-**Intento 3: Cambiar el nombre del campo**
-```typescript
-relatedSlug: z.string() // ❌ ¡Seguía desapareciendo!
-```
-
-Nada funcionaba. ¡Incluso los **campos requeridos** se eliminaban!
-
-### La causa raíz
-
-Después de una depuración exhaustiva, descubrí el problema: **estaba editando el archivo de configuración equivocado**.
+Copié mis últimas definiciones de schema del archivo incorrecto (`src/content/config.ts`) al correcto (`src/content.config.ts`) y luego eliminé el duplicado.
 
 ```bash
-# Lo que tenía:
-src/content/config.ts        ❌ Ubicación INCORRECTA (siendo editada)
-src/content.config.ts         ✅ Ubicación CORRECTA (siendo usada por Astro)
-```
-
-Según la [documentación de Astro](https://docs.astro.build/en/guides/content-collections/), el archivo de configuración de contenido debe ser:
-
-- **Nombre del archivo:** `content.config.ts` (no solo `config.ts`)
-- **Ubicación:** `src/content.config.ts` (en la raíz de `src`, NO dentro de la carpeta `content`)
-
-### Por qué sucedió esto
-
-Había creado inadvertidamente un archivo de configuración duplicado en la ubicación incorrecta:
-
-```
-src/
-├── content/
-│   ├── blog/
-│   └── config.ts          ❌ Estaba editando este
-└── content.config.ts      ✅ Astro estaba usando este
-```
-
-Cuando actualizaba `src/content/config.ts`, Astro lo ignoraba completamente porque solo lee desde `src/content.config.ts`.
-
-### La solución
-
-**Paso 1: Verificar la ubicación correcta del archivo**
-
-```bash
-# Verificar qué archivo existe
-ls -la src/content*.ts
-
-# Debería devolver:
-# src/content.config.ts  ✅ Esto es correcto
-```
-
-**Paso 2: Eliminar archivos de configuración duplicados**
-
-```bash
-# Si tienes un duplicado, elimínalo
+# Elimina el archivo de configuración incorrecto
 rm src/content/config.ts
 ```
 
-**Paso 3: Actualizar el archivo CORRECTO**
+### Paso 3: Actualiza el Archivo Correcto
+
+Con el duplicado eliminado, me aseguré de que el archivo correcto (`src/content.config.ts`) tuviera el schema final.
 
 ```typescript
 // src/content.config.ts ✅
-import { glob } from "astro/loaders";
 import { z, defineCollection } from "astro:content";
 
-const blog = defineCollection({
-  loader: glob({
-    pattern: "**/*.{md,mdx}",
-    base: "./src/content/blog"
-  }),
+const blogCollection = defineCollection({
   schema: z.object({
-    title: z.string(),
-    description: z.string(),
-    pubDate: z.coerce.date(),
-    author: z.string(),
-    tags: z.array(z.string()).default([]),
-    draft: z.boolean().default(false),
+    // ... todos mis campos
     relatedSlug: z.string(), // ✅ ¡Ahora funciona!
   }),
 });
 
-export const collections = { blog };
+export const collections = { blog: blogCollection };
 ```
 
-**Paso 4: Limpiar la caché de Astro y reconstruir**
+### Paso 4: Limpia la Caché
+
+Finalmente, para asegurar que Astro recogiera los cambios, limpié la caché y reinicié el servidor de desarrollo.
 
 ```bash
+# Limpia el directorio de caché .astro
 rm -rf .astro
-npm run build
+# Reinicia el servidor de desarrollo
+npm run dev
 ```
 
-### Verificación
+Después de estos pasos, el campo `relatedSlug` apareció correctamente en mis tipos y en tiempo de ejecución.
 
-Después de corregir la ubicación del archivo, todo funcionó perfectamente:
+## Checklist de Depuración para Content Collections de Astro
 
-```typescript
-// ¡Ahora esto funciona! ✅
-const posts = await getCollection('blog');
-const currentPost = posts.find(/* ... */);
+Si te enfrentas a un problema similar, revisa esta lista antes de sumergirte en una depuración profunda:
 
-// El campo es accesible
-const relatedSlug = currentPost.data.relatedSlug; // ✅ ¡Funciona!
-
-// Los tipos de TypeScript son correctos
-// No más errores de "Property 'relatedSlug' does not exist"
-```
-
-### Conclusiones clave
-
-1. **El nombre del archivo importa:** Usa `content.config.ts`, no `config.ts`
-2. **La ubicación importa:** Colócalo en la raíz de `src/`, no dentro de `src/content/`
-3. **Verifica duplicados:** Busca archivos de configuración en conflicto
-4. **Limpia la caché:** Siempre ejecuta `rm -rf .astro` después de cambios importantes de configuración
-5. **Verifica la ruta de importación:** Las definiciones de tipos de Astro referencian `src/content.config.js`
-
-### Cómo evitar este problema
-
-**1. Usa las convenciones correctas de Astro:**
-```bash
-# Ubicación correcta del config de contenido
-src/content.config.ts        ✅
-
-# NO estas ubicaciones:
-src/content/config.ts        ❌
-src/contentConfig.ts         ❌
-content.config.ts            ❌
-```
-
-**2. Verifica los tipos generados:**
-```typescript
-// .astro/content.d.ts debería referenciar:
-export type ContentConfig = typeof import("../src/content.config.js");
-//                                          ^^^^^^^^^^^^^^^^^^
-// Si esta ruta está mal, ¡estás editando el archivo equivocado!
-```
-
-**3. Presta atención a los errores de TypeScript:**
-Si ves errores de "Property does not exist" para campos que SABES que definiste, verifica la ubicación de tu archivo de configuración antes de asumir que es un bug de Astro.
-
-## Implementación en el mundo real
-
-Así es como lo uso para publicaciones de blog multiidioma:
-
-**Frontmatter (versión en inglés):**
-```markdown
----
-title: "Introduction to Astro 5"
-relatedSlug: "introduccion-astro-5"  # Slug de la versión en español
----
-```
-
-**Frontmatter (versión en español):**
-```markdown
----
-title: "Introducción a Astro 5"
-relatedSlug: "introduction-astro-5"  # Slug de la versión en inglés
----
-```
-
-**Implementación del cambio de idioma:**
-```typescript
-// src/i18n/utils.ts
-export async function getTranslatedBlogPath(
-  currentSlug: string,
-  currentLang: Language,
-  targetLang: Language
-): Promise<string | null> {
-  const { getCollection } = await import('astro:content');
-  const posts = await getCollection('blog');
-
-  const currentPost = posts.find(post => {
-    const slug = post.id.replace(/^(en|es)\//, '');
-    return slug === currentSlug && post.id.startsWith(`${currentLang}/`);
-  });
-
-  if (!currentPost?.data.relatedSlug) return null;
-
-  const translatedSlug = currentPost.data.relatedSlug;
-
-  // Verificar que el post traducido existe
-  const translatedPost = posts.find(post => {
-    const slug = post.id.replace(/^(en|es)\//, '');
-    return slug === translatedSlug && post.id.startsWith(`${targetLang}/`);
-  });
-
-  if (!translatedPost) return null;
-
-  return targetLang === 'es'
-    ? `/blog/${translatedSlug}`
-    : `/en/blog/${translatedSlug}`;
-}
-```
-
-## Lista de verificación de depuración
-
-Si tus campos del schema están desapareciendo, verifica estos puntos en orden:
-
-- [ ] **Ubicación del archivo:** ¿Está en `src/content.config.ts`?
-- [ ] **Nombre del archivo:** ¿Es `content.config.ts` (no `config.ts`)?
-- [ ] **Sin duplicados:** ¿Solo existe UN archivo de configuración de contenido?
-- [ ] **Caché limpiada:** ¿Ejecutaste `rm -rf .astro`?
-- [ ] **Ruta de importación:** ¿`.astro/content.d.ts` referencia el archivo correcto?
-- [ ] **Sintaxis del schema:** ¿Schema Zod válido con `z.object()`?
-- [ ] **Exportado correctamente:** ¿Usas `export const collections = { ... }`?
+- [ ] **Ubicación Correcta:** ¿Está tu archivo de configuración en `src/content.config.ts`?
+- [ ] **Nombre Correcto:** ¿Se llama `content.config.ts` exactamente?
+- [ ] **Sin Duplicados:** ¿Hay solo un archivo `content.config.ts` en tu proyecto?
+- [ ] **Caché Limpiada:** ¿Has intentado eliminar el directorio `.astro`?
+- [ ] **Exportación del Schema:** ¿Tu archivo de configuración exporta correctamente `export const collections`?
 
 ## Conclusión
 
-Este viaje de depuración me enseñó una lección importante: **cuando estés solucionando problemas con frameworks, siempre verifica primero que estás editando los archivos de configuración correctos**.
-
-Lo que parecía un bug complejo de Astro era en realidad un simple error de configuración. ¡El framework funcionaba perfectamente—solo estaba mirando en el lugar equivocado!
-
-¿Has encontrado problemas similares con Astro u otros frameworks? El diablo suele estar en los detalles como las convenciones de nombres y ubicación de archivos.
-
----
-
-**Recursos relacionados:**
-- [Documentación de Content Collections de Astro](https://docs.astro.build/en/guides/content-collections/)
-- [API de Content Layer de Astro](https://docs.astro.build/en/guides/content-layer/)
-- [Validación de Schema con Zod](https://zod.dev/)
+Esta experiencia fue un recordatorio clásico: **domina las convenciones de tu framework.** Lo que parecía un bug complejo era una simple configuración errónea. Antes de sospechar de un error en la herramienta, siempre verifica que estás siguiendo sus convenciones fundamentales.
